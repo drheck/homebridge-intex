@@ -29,7 +29,7 @@ export class IntexSwitch implements AccessoryPlugin {
 
   private readonly switchService: Service;
 	private informationService: Service;
-	private readonly Characteristic: homebridge.hap.Characteristic;
+	private readonly Characteristic: any;
   config: PlatformConfig;
 
 	constructor(hap: HAP, log: Logging, name: string, mrSPA: DPHIntex, config: PlatformConfig) {
