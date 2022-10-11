@@ -6,7 +6,7 @@
 </p>
 
 
-# Homebridge Platform Plugin Template
+# Homebridge Intex Plugin
 
 This is a template Homebridge platform plugin and can be used as a base to help you get started developing your own plugin.
 
