@@ -5,6 +5,7 @@ import { IntexSwitch } from "./switch-accessory";
 import { IntexThermostat } from "./thermostat-accessory";
 import { IntexTempSensor } from "./tempsensor-accessory";
 
+//import axios from "axios";
 const axios = require("axios");
 //const FakeGatoHistoryService = require('fakegato-history')(homebridge);
 
@@ -62,7 +63,7 @@ export class DPHIntex {
   requestClient: any;
 	updateInterval: any;
 	refreshTokenInterval: any;
-	deviceArray: string[];
+	deviceArray: string[] = [];
   session: {token};
 	sleepTimeout: NodeJS.Timeout;
 	log: Logging;
@@ -76,7 +77,7 @@ export class DPHIntex {
 		this.username = username;
 		this.password = password;
 		this.interval = interval;
-		this.deviceArray = new Array();
+		//this.deviceArray = new Array();
 
 		this.mBubbles = false;
 		this.mPump = false;
@@ -362,7 +363,7 @@ export class DPHIntex {
 						//url: URL + "api/v1/device/command/feedback/" + device.deviceId + "/" + sid,
 						headers: this.getHeadersAuth(),
 					})
-						.then((res) => {
+						.then(async (res) => {
 						})
 						.catch((error) => {
 							this.log.info("error getDeviceList: " + error);
@@ -405,7 +406,7 @@ export class DPHIntex {
 //								this.log("*************************************************************************");
 //								this.log("Feedback: " + deviceId);
 //                            this.log(JSON.stringify(res.data));
-								let erg = res.data.data;
+								const erg = res.data.data;
 //								this.log("ResultStr: " + erg);
 
 								this.mBubbles = erg.substr(10, 1);

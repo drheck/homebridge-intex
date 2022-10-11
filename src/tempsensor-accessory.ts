@@ -35,7 +35,7 @@ export class IntexTempSensor implements AccessoryPlugin {
 	//private historyService: any;
 	private historyService: fakegato.FakeGatoHistoryService;
 
-	public displayName: String;
+	public displayName: string;
 	
 	constructor(hap: HAP, log: Logging, name: string, mrSPA: DPHIntex, config: PlatformConfig, api: API) {
 		this.log = log;
