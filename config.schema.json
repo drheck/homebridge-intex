@@ -1,16 +1,109 @@
 {
-  "pluginAlias": "ExampleHomebridgePlugin",
-  "pluginType": "platform",
-  "singular": true,
-  "schema": {
-    "type": "object",
-    "properties": {
-      "name": {
-        "title": "Name",
-        "type": "string",
-        "required": true,
-        "default": "Example Dynamic Platform"
-      }
-    }
-  }
+	"pluginAlias": "homebridge-intex",
+	"pluginType": "platform",
+	"singular": true,
+	"headerDisplay": null,
+	"schema": {
+		"type": "object",
+		"properties": {
+			"name": {
+				"title": "Platform name",
+				"type": "string",
+				"format": "string",
+				"default": "MyPool",
+				"description": "The name of your device to show in the Home app",
+				"minLength": 1,
+				"required": true
+			},
+			"model": {
+				"name": "Model",
+				"type": "string",
+				"default": "Bubble SPA V26310",
+				"placeholder": "Bubble SPA V26310",
+				"description": "Set the model for display in the Home app."
+			},
+			"username": {
+				"title": "Email Address",
+				"type": "string",
+				"minLength": 1,
+				"required": true,
+				"x-schema-form": {
+					"type": "email"
+				}
+			},
+			"password": {
+				"title": "Password",
+				"type": "string",
+				"minLength": 1,
+				"required": true,
+				"x-schema-form": {
+					"type": "password"
+				}
+			},
+			"Filter": {
+				"title": "Show Filter Button",
+				"type": "boolean",
+				"description": "Creates a Filter ON/OFF button",
+				"default": true
+			},
+			"Bubbles": {
+				"title": "Show Bubbles Button",
+				"type": "boolean",
+				"description": "Creates a Bubbles ON/OFF button",
+				"default": true
+			},
+			"debug": {
+				"title": "Debug logging",
+				"type": "boolean",
+				"description": "Turns on additional logging (can be helpful for diagnosing issues)"
+			},
+			"refreshInterval": {
+				"title": "Refresh interval (minutes)",
+				"type": "integer",
+				"default": 1
+			}
+		}
+	},
+	"layout": [
+		{
+			"type": "flex",
+			"flex-flow": "row wrap",
+			"items": [
+				{
+					"key": "name",
+					"type": "string"
+				},
+				{
+					"key": "username",
+					"type": "string"
+				},
+				{
+					"key": "password",
+					"type": "string"
+				},
+				{
+					"key": "model",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"type": "fieldset",
+			"title": "Show elements",
+			"expandable": true,
+			"items": [
+				"Filter",
+				"Bubbles"
+			]
+		},
+		{
+			"type": "fieldset",
+			"title": "Advanced configuration",
+			"expandable": true,
+			"items": [
+				"debug",
+				"refreshInterval"
+			]
+		}
+	]
 }
