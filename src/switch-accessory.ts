@@ -36,24 +36,24 @@ export class IntexSwitch implements AccessoryPlugin {
 		this.log = log;
 		this.config = config;
     this.name = name;
-		if (name === "Filter" && config.Filter == false) {
+		if (name === "Filter" && config.Filter === false) {
 			log.debug("Switch (" + name + ") is not created");
 			return;
 		}
-		if (name == "Bubbles" && config.Bubbles == false) {
+		if (name === "Bubbles" && config.Bubbles === false) {
 			log.debug("Switch (" + name + ") is not created");
 			return;
 		}
 /* ToDo: Waterjet
-		if (name == "Waterjet" && config.Waterjet == false) {
+		if (name === "Waterjet" && config.Waterjet === false) {
 			log.debug("Switch (" + name + ") is not created");
 			return;
 		}
-		if (name == "Sanitizer" && config.Sanitizer == false) {
+		if (name === "Sanitizer" && config.Sanitizer === false) {
 			log.debug("Switch (" + name + ") is not created");
 			return;
 		}
-		if (name == "Controller" && config.Controller == false) {
+		if (name === "Controller" && config.Controller === false) {
 			log.debug("Switch (" + name + ") is not created");
 			return;
 		}
@@ -70,16 +70,16 @@ export class IntexSwitch implements AccessoryPlugin {
 				this.switchOn = value as boolean;
 				if (mrSPA._isUpdatingUI) return;
 				log.debug("Switch (" + name + ") state was set to: " + (this.switchOn ? "ON" : "OFF"));
-				if (name == "Bubbles")
+				if (name === "Bubbles")
 					mrSPA.execCommand(BUBBLE_ONOFF, this.switchOn);
-				else if (name == "Filter")
+				else if (name === "Filter")
 					mrSPA.execCommand(FILTER_ONOFF, this.switchOn);
 /* ToDo: Waterjet
-				else if (name == "Waterjet")
+				else if (name === "Waterjet")
 					mrSPA.execCommand(WATER_JET_ONOFF, this.switchOn);
-				else if (name == "Sanitizer")
+				else if (name === "Sanitizer")
 					mrSPA.execCommand(SANITIZER_ONOFF, this.switchOn);
-				else if (name == "Controller")
+				else if (name === "Controller")
 					mrSPA.execCommand(CONTROLLER_ONOFF, this.switchOn);
 */
 
@@ -92,16 +92,16 @@ export class IntexSwitch implements AccessoryPlugin {
 			.setCharacteristic(hap.Characteristic.SerialNumber, "SN_" + this.name);
 
 
-		if (name == "Bubbles")
+		if (name === "Bubbles")
 			mrSPA._swBubbles = this;
-		else if (name == "Filter")
+		else if (name === "Filter")
 			mrSPA._swPump = this;
 /* ToDo: Waterjet
-		else if (name == "Waterjet")
+		else if (name === "Waterjet")
 			mrSPA._swWaterjet = this;
-		else if (name == "Sanitizer")
+		else if (name === "Sanitizer")
 			mrSPA._swSanitizer = this;
-		else if (name == "Controller")
+		else if (name === "Controller")
 			mrSPA._swController = this;
 */
 

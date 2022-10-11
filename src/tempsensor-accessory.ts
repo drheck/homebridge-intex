@@ -102,8 +102,7 @@ export class IntexTempSensor implements AccessoryPlugin {
 			temp: value
 		});
 		//this.loggingService.addEntry({ time: Math.round(new Date().valueOf() / 1000), 
-		//temp: this.temperature, pressure: this.airPressure, humidity: this.humidity
-	});
+		//temp: this.temperature, pressure: this.airPressure, humidity: this.humidity});
 	}
 
   /*
