@@ -1,5 +1,6 @@
 import {
 	AccessoryPlugin,
+	Characteristic,
   CharacteristicGetCallback,
   CharacteristicSetCallback,
   CharacteristicValue,
@@ -8,7 +9,7 @@ import {
   Service,
 	CharacteristicEventTypes,
 	PlatformConfig
-} from "homebridge";
+} from 'homebridge';
 
 import { DPHIntex } from "./dph_intex_Api";
 
@@ -27,7 +28,7 @@ export class IntexThermostat implements AccessoryPlugin {
 
 	private readonly thermostatService: Service;
 	private informationService: Service;
-	private readonly Characteristic: any;
+	private readonly Characteristic: typeof Characteristic;
 
 	private thermostatOn = false;
 	private thermostatint = 10;

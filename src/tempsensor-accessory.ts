@@ -1,12 +1,14 @@
 import {
+	API,
 	AccessoryPlugin,
+	Characteristic,
 	CharacteristicGetCallback,
 	HAP,
 	Logging,
 	Service,
 	CharacteristicEventTypes,
 	PlatformConfig
-} from "homebridge";
+} from 'homebridge';
 
 import fakegato from "fakegato-history";
 import { DPHIntex } from "./dph_intex_Api";
@@ -22,7 +24,7 @@ export class IntexTempSensor implements AccessoryPlugin {
 
   private readonly tempsensorService: Service;
 	private informationService: Service;
-	private readonly Characteristic: any;
+	private readonly Characteristic: typeof Characteristic;
 	private config: PlatformConfig;
 	//private historyService: any;
 	private historyService: fakegato.FakeGatoHistoryService;

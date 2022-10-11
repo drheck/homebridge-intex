@@ -1,5 +1,6 @@
 import {
-  AccessoryPlugin,
+	AccessoryPlugin,
+	Characteristic,
   CharacteristicGetCallback,
   CharacteristicSetCallback,
   CharacteristicValue,
@@ -8,7 +9,8 @@ import {
   Service,
 	CharacteristicEventTypes,
 	PlatformConfig
-} from "homebridge";
+} from 'homebridge';
+
 import { DPHIntex } from "./dph_intex_Api";
 
 //Commands
@@ -29,7 +31,7 @@ export class IntexSwitch implements AccessoryPlugin {
 
   private readonly switchService: Service;
 	private informationService: Service;
-	private readonly Characteristic: any;
+	private readonly Characteristic: typeof Characteristic;
   config: PlatformConfig;
 
 	constructor(hap: HAP, log: Logging, name: string, mrSPA: DPHIntex, config: PlatformConfig) {
