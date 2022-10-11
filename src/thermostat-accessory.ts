@@ -1,6 +1,5 @@
 import {
 	AccessoryPlugin,
-	PlatformAccessory,
   CharacteristicGetCallback,
   CharacteristicSetCallback,
   CharacteristicValue,
@@ -32,7 +31,7 @@ export class IntexThermostat implements AccessoryPlugin {
 
 	private thermostatOn = false;
 	private thermostatint = 10;
-    config: PlatformConfig;
+  config: PlatformConfig;
 
 	constructor(hap: HAP, log: Logging, name: string, mrSPA: DPHIntex, config: PlatformConfig) {
 		this.log = log;
@@ -110,7 +109,8 @@ export class IntexThermostat implements AccessoryPlugin {
 				callback();
 			});
 
-		//this.thermostatService.getCharacteristic(this.Characteristic.TemperatureDisplayUnits).setValue(this.Characteristic.TemperatureDisplayUnits.CELSIUS);
+		//this.thermostatService.getCharacteristic(this.Characteristic.TemperatureDisplayUnits)
+		//.setValue(this.Characteristic.TemperatureDisplayUnits.CELSIUS);
 		//Characteristic.CurrentHeatingCoolingState.OFF = 0;
 		//Characteristic.CurrentHeatingCoolingState.HEAT = 1;
 		//Characteristic.CurrentHeatingCoolingState.COOL = 2;

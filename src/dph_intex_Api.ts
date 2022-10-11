@@ -1,11 +1,13 @@
 import {
 	Logging,
 } from "homebridge";
+
 import { IntexSwitch } from "./switch-accessory";
 import { IntexThermostat } from "./thermostat-accessory";
 import { IntexTempSensor } from "./tempsensor-accessory";
 
-import axios from "axios";
+//import axios from "axios";
+import axios, { AxiosInstance} from "axios";
 
 //Commands
 const CONTROLLER_ONOFF = 1;
@@ -58,9 +60,9 @@ export class DPHIntex {
   username: string;
   password: string;
   interval: number;
-  requestClient: any;
-	updateInterval: any;
-	refreshTokenInterval: any;
+	requestClient: AxiosInstance;
+	updateInterval: NodeJS.Timeout;
+	refreshTokenInterval: NodeJS.Timeout;
 	deviceArray: string[] = [];
   session: {token};
 	sleepTimeout: NodeJS.Timeout;
@@ -200,7 +202,7 @@ export class DPHIntex {
 				commandname = "SET_PRESETTEMP";
 				break;
 		}
-		if (command == SET_PRESETTEMP) {
+		if (command === SET_PRESETTEMP) {
 			subcmd = this.getTempCommand(value);
 			this.postCommand(subcmd);
 		}
@@ -344,7 +346,7 @@ export class DPHIntex {
 	}
 
 	async getDeviceList() {
-		const sid = Date.now();
+//		const sid = Date.now();
 		await this.requestClient({
 			method: "get",
 			url: URL + "api/v1/userdevice/user",
@@ -397,7 +399,7 @@ export class DPHIntex {
 				.then(async (res) => {
 //					this.log("*************************************************************************");
 //					this.log.debug("Status: " + deviceId);
-//					this.log(JSON.stringify(res.data));
+					this.log.debug(JSON.stringify(res.data));
 					await this.sleep(2000);
 					await this.requestClient({
 						method: "GET",
@@ -477,13 +479,21 @@ this.log("End");
 //Device
 /*
 [
-{"id":18,"commandSetTypeId":3,"currentVersion":"1.8","commandSetType":"TESPA02","commandName":"PowerOnOff","commandData":"8888060F014000"},
-{"id":19,"commandSetTypeId":3,"currentVersion":"1.8","commandSetType":"TESPA02","commandName":"JetOnOff","commandData":"8888060F011000"},
-{"id":20,"commandSetTypeId":3,"currentVersion":"1.8","commandSetType":"TESPA02","commandName":"BubbleOnOff","commandData":"8888060F010400"},
-{"id":21,"commandSetTypeId":3,"currentVersion":"1.8","commandSetType":"TESPA02","commandName":"HeatOnOff","commandData":"8888060F010010"},
-{"id":22,"commandSetTypeId":3,"currentVersion":"1.8","commandSetType":"TESPA02","commandName":"PumpOnOff","commandData":"8888060F010004"},
-{"id":23,"commandSetTypeId":3,"currentVersion":"1.8","commandSetType":"TESPA02","commandName":"SanitizerOnOff","commandData":"8888060F010001"},
-{"id":24,"commandSetTypeId":3,"currentVersion":"1.8","commandSetType":"TESPA02","commandName":"Refresh","commandData":"8888060FEE0F01"},
-{"id":25,"commandSetTypeId":3,"currentVersion":"1.8","commandSetType":"TESPA02","commandName":"TempSet","commandData":"8888050F0C"}
+{"id":18,"commandSetTypeId":3,"currentVersion":"1.8","commandSetType":"TESPA02","commandName":"PowerOnOff",
+"commandData":"8888060F014000"},
+{"id":19,"commandSetTypeId":3,"currentVersion":"1.8","commandSetType":"TESPA02","commandName":"JetOnOff",
+"commandData":"8888060F011000"},
+{"id":20,"commandSetTypeId":3,"currentVersion":"1.8","commandSetType":"TESPA02","commandName":"BubbleOnOff",
+"commandData":"8888060F010400"},
+{"id":21,"commandSetTypeId":3,"currentVersion":"1.8","commandSetType":"TESPA02","commandName":"HeatOnOff",
+"commandData":"8888060F010010"},
+{"id":22,"commandSetTypeId":3,"currentVersion":"1.8","commandSetType":"TESPA02","commandName":"PumpOnOff",
+"commandData":"8888060F010004"},
+{"id":23,"commandSetTypeId":3,"currentVersion":"1.8","commandSetType":"TESPA02","commandName":"SanitizerOnOff",
+"commandData":"8888060F010001"},
+{"id":24,"commandSetTypeId":3,"currentVersion":"1.8","commandSetType":"TESPA02","commandName":"Refresh",
+"commandData":"8888060FEE0F01"},
+{"id":25,"commandSetTypeId":3,"currentVersion":"1.8","commandSetType":"TESPA02","commandName":"TempSet",
+"commandData":"8888050F0C"}
 ]
 */
