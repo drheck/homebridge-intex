@@ -362,6 +362,11 @@ export class DPHIntex {
 						headers: this.getHeadersAuth(),
 					})
 						.then(async (res) => {
+							this.log.info("DeviceInfo - Commands: ", JSON.stringify(res.data));
+							for (const command of res.data) {
+								this.log.info("Commands: ", command.commandName);
+								this.log.info("CommandData: ", command.commandData);
+							}
 						})
 						.catch((error) => {
 							this.log.info("error getDeviceList: " + error);
