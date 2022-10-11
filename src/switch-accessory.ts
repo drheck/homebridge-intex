@@ -12,11 +12,11 @@ import {
 import { DPHIntex } from "./dph_intex_Api";
 
 //Commands
-const CONTROLLER_ONOFF = 1;
+//const CONTROLLER_ONOFF = 1;
 const FILTER_ONOFF = 2;
-const WATER_JET_ONOFF = 8;
+//const WATER_JET_ONOFF = 8;
 const BUBBLE_ONOFF = 10;
-const SANITIZER_ONOFF = 20;
+//const SANITIZER_ONOFF = 20;
 
 export class IntexSwitch implements AccessoryPlugin {
 
@@ -29,14 +29,14 @@ export class IntexSwitch implements AccessoryPlugin {
 
   private readonly switchService: Service;
 	private informationService: Service;
-	private readonly Characteristic: any;
-    config: PlatformConfig;
+	private readonly Characteristic: homebridge.hap.Characteristic;
+  config: PlatformConfig;
 
 	constructor(hap: HAP, log: Logging, name: string, mrSPA: DPHIntex, config: PlatformConfig) {
 		this.log = log;
 		this.config = config;
     this.name = name;
-		if (name == "Filter" && config.Filter == false) {
+		if (name === "Filter" && config.Filter == false) {
 			log.debug("Switch (" + name + ") is not created");
 			return;
 		}

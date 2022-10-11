@@ -2,22 +2,17 @@ import fakegato from "fakegato-history";
 import {
   AccessoryPlugin,
   CharacteristicGetCallback,
-  CharacteristicSetCallback,
-	CharacteristicValue,
+//  CharacteristicSetCallback,
+//	CharacteristicValue,
 	API,
   HAP,
   Logging,
   Service,
 	CharacteristicEventTypes,
 	PlatformConfig,
-	Nullable
+//	Nullable
 } from "homebridge";
 import { DPHIntex } from "./dph_intex_Api";
-
-//Commands
-const FILTER_ONOFF = 2;
-const BUBBLE_ONOFF = 10;
-const REFRESH = 22;
 
 export class IntexTempSensor implements AccessoryPlugin {
 
@@ -30,7 +25,7 @@ export class IntexTempSensor implements AccessoryPlugin {
 
   private readonly tempsensorService: Service;
 	private informationService: Service;
-	private readonly Characteristic: any;
+	private readonly Characteristic: homebridge.hap.Characteristic;
 	private config: PlatformConfig;
 	//private historyService: any;
 	private historyService: fakegato.FakeGatoHistoryService;
@@ -99,14 +94,16 @@ export class IntexTempSensor implements AccessoryPlugin {
 		//this.switchService.getCharacteristic(this.Characteristic.CurrentTemperature).updateValue(value);
 		//const availability: Nullable<CharacteristicValue> | Error = new Error(this.displayName + ': Service not available');
 		this.tempsensorService.getCharacteristic(this.Characteristic.CurrentTemperature).setValue(value);
-		if (value == -1)
+		if (value === -1)
 			return;
 		//add to history
 		this.historyService.addEntry({
 			time: new Date().getTime() / 1000,
 			temp: value
 		});
-		//this.loggingService.addEntry({ time: Math.round(new Date().valueOf() / 1000), temp: this.temperature, pressure: this.airPressure, humidity: this.humidity });
+		//this.loggingService.addEntry({ time: Math.round(new Date().valueOf() / 1000), 
+		//temp: this.temperature, pressure: this.airPressure, humidity: this.humidity
+	});
 	}
 
   /*

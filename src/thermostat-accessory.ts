@@ -27,7 +27,7 @@ export class IntexThermostat implements AccessoryPlugin {
 
 	private readonly thermostatService: Service;
 	private informationService: Service;
-	private readonly Characteristic: any;
+	private readonly Characteristic: homebridge.hap.Characteristic;
 
 	private thermostatOn = false;
 	private thermostatint = 10;
