@@ -6,6 +6,7 @@ import { IntexThermostat } from "./thermostat-accessory";
 import { IntexTempSensor } from "./tempsensor-accessory";
 
 //import axios from "axios";
+/* tslint:disable no-var-requires */
 const axios = require("axios");
 //const FakeGatoHistoryService = require('fakegato-history')(homebridge);
 
