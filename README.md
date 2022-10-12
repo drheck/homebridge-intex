@@ -8,7 +8,7 @@
 
 # Homebridge Intex Plugin
 
-This is a Homebridge platform plugin for Intex Pools.
+This is a Homebridge platform plugin for Intex Pools with WLAN.
 The plugin provides the following homekit devices:
 1. One Temperaturesensor
 2. One Thermostat accessory (Shows current temperature, you can switch heating On/Off and set the target temperature)
