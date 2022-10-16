@@ -17,6 +17,3 @@ The plugin provides the following homekit devices:
 3. Two switches:
   3.1 Filter: Switches the Filter On/Off
   3.2 Bubbles: Switches the Bubbles On/Off
-
-
-More documentation ist following...
