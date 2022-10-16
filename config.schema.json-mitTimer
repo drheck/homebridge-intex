@@ -1,0 +1,120 @@
+{
+	"pluginAlias": "homebridge-intex",
+	"pluginType": "platform",
+	"singular": true,
+	"headerDisplay": null,
+	"schema": {
+		"type": "object",
+		"properties": {
+			"name": {
+				"title": "Platform name",
+				"type": "string",
+				"format": "string",
+				"default": "MyPool",
+				"description": "The name of your device to show in the Home app",
+				"minLength": 1,
+				"required": true
+			},
+			"manufacturer": {
+				"name": "Manufacturer",
+				"type": "string",
+				"placeholder": "Intex",
+				"description": "Set the manufacturer name for display in the Home app."
+			},
+			"model": {
+				"name": "Model",
+				"type": "string",
+				"default": "Bubble SPA V26310",
+				"placeholder": "Bubble SPA V26310",
+				"description": "Set the model for display in the Home app."
+			},
+			"username": {
+				"title": "Email Address",
+				"type": "string",
+				"minLength": 1,
+				"required": true,
+				"x-schema-form": {
+					"type": "email"
+				}
+			},
+			"password": {
+				"title": "Password",
+				"type": "string",
+				"minLength": 1,
+				"required": true,
+				"x-schema-form": {
+					"type": "password"
+				}
+			},
+			"debug": {
+				"title": "Debug logging",
+				"type": "boolean",
+				"description": "Turns on additional logging (can be helpful for diagnosing issues)"
+			},
+			"refreshInterval": {
+				"title": "Refresh interval (minutes)",
+				"type": "integer",
+				"default": 1
+			},
+			"timer": {
+				"title": "Timerliste",
+				"description": "Hier kann man Timer definieren",
+				"type": "array",
+				"items": {
+					"type": "object",
+					"properties": {
+						"name": {
+							"title": "Name",
+							"type": "string",
+							"placeholder": "Filter/Heating Timer1",
+							"required": true,
+							"minLength": 4
+						},
+						"targettype": {
+							"title": "Targettyp",
+							"description": "Liste mit den Targettypen",
+							"type": "string",
+							"placeholder": "Filtering",
+							"required": true,
+							"typeahead": {
+								"source": [
+									"Filtering",
+									"Heating"
+								]
+							}
+						},
+						"timertype": {
+							"title": "Timertyp",
+							"description": "Liste mit den Timertypen",
+							"type": "string",
+							"placeholder": "Daily",
+							"required": true,
+							"typeahead": {
+								"source": [
+									"Daily",
+									"Once"
+								]
+							}
+						},
+						"Start": {
+							"title": "Startzeit",
+							"description": "Zeitpunkt an dem der Timer startet",
+							"type": "string",
+							"placeholder": "",
+							"format": "date-time",
+							"required": true
+						},
+						"Dauer": {
+							"title": "Dauer",
+							"description": "Dauer in ganzen Stunden",
+							"placeholder": 0,
+							"type": "integer",
+							"required": true,
+							"maximum": 10
+						}
+					}
+				}
+			}
+		}
+	}
+}
