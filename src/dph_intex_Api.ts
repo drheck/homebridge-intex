@@ -1,5 +1,5 @@
 import {
-  Logging,
+  Logging
 } from 'homebridge';
 
 import { IntexSwitch } from './switch-accessory';
@@ -29,7 +29,7 @@ const URL = 'https://intexiotappservice.azurewebsites.net/';
 
 export class DPHIntex {
   //private FakeGatoHistoryService = require('fakegato-history')(homebridge);
-  public _Thermostat: IntexThermostat;
+	public _Thermostat: IntexThermostat;
   public _swPump: IntexSwitch;
   public _swBubbles: IntexSwitch;
   /* ToDo: Waterjet
@@ -88,7 +88,7 @@ export class DPHIntex {
 		*/
     this.mHeater = false;
     this.mcurTemp = 0;
-    this.mpresetTemp = 0;
+    this.mpresetTemp = 10;
     this.mTempUnit = 0;
     this.log.info('End Create Intex');
   }
@@ -126,7 +126,7 @@ export class DPHIntex {
 
       if (this.session.token) {
         deviceId = this.deviceArray[0];
-        this.log('postcommand: ' + URL + 'api/v1/command/' + deviceId + ', data= { sid: ' + Date.now() + ', type: 1, data: ' + send);
+        this.log('postcommand-URL: ' + URL + 'api/v1/command/' + deviceId + ', data= { sid: ' + Date.now() + ', type: 1, data: ' + send);
 
         await this.requestClient({
           method: 'post',
@@ -139,11 +139,11 @@ export class DPHIntex {
           }),
         })
           .then((res) => {
-            this.log('res.data: ', JSON.stringify(res.data));
+						this.log('posCommand-res.data: ', JSON.stringify(res.data));
             return res.data;
           })
           .catch((error) => {
-            this.log('Xerror: ' + error);
+            this.log('posCommand-Xerror: ' + error);
             if (error.response) {
               this.log(JSON.stringify(error.response.data));
             }
@@ -157,7 +157,8 @@ export class DPHIntex {
       }, 5000,
       );
 
-      this.updateInterval = setInterval(async () => {
+			this.updateInterval = setInterval(async () => {
+				this.log.debug('posCommand-updateInterval =', this.updateInterval);
         await this.getDeviceData();
       }, this.interval * 60 * 1000);
     }
@@ -273,10 +274,12 @@ export class DPHIntex {
     await this.login();
 
     if (this.session.token) {
-      await this.getDeviceList();
+			await this.getDeviceList();
+			this.log('onReady');
       await this.getDeviceData();
 
-      this.updateInterval = setInterval(async () => {
+			this.updateInterval = setInterval(async () => {
+				this.log.debug('onReady-updateInterval = ', this.updateInterval);
         await this.getDeviceData();
       }, this.interval * 60 * 1000);
       this.refreshTokenInterval = setInterval(() => {
@@ -377,19 +380,19 @@ export class DPHIntex {
               }
             })
             .catch((error) => {
-              this.log.info('error getDeviceList: ' + error);
+              this.log.info('getDeviceList-for each error: ' + error);
               error.response && this.log.debug(JSON.stringify(error.response.data));
             });
         }
       })
       .catch((error) => {
-        this.log(error);
-        error.response && this.log(JSON.stringify(error.response.data));
+				this.log('getDeviceList-error: ' + error);
+				error.response && this.log('getDeviceList-error.response.data: ' + JSON.stringify(error.response.data));
       });
   }
 
   async getDeviceData() {
-    this.log('getDeviceData');
+    this.log('getDeviceData-start');
     this.deviceArray.forEach(async (deviceId) => {
       const sid = Date.now();
       await this.requestClient({
@@ -448,7 +451,7 @@ export class DPHIntex {
             .catch((error) => {
               this.log.debug(error);
               if (error.response) {
-                this.log.info('1-Service not reachable');
+								this.log.info('getDeviceData-Feedback not reachable');
                 this.UpdateUI('No Data 1');
                 this.log.debug(JSON.stringify(error.response.data));
               }
@@ -456,18 +459,18 @@ export class DPHIntex {
         })
         .catch((error) => {
           if (error.response && error.response.status >= 500) {
-            this.log('Service not reachable');
+						this.log('getDeviceData-Status not reachable >= 500');
             this.UpdateUI('No Data');
-            error.response && this.log.debug(JSON.stringify(error.response.data));
+						error.response && this.log.debug('getDeviceData-error.respons.data: ' + JSON.stringify(error.response.data));
             return;
           }
           this.UpdateUI('No Data 2');
-          this.log.info('2-Service not reachable');
+					this.log.info('getDeviceData-2-Service not reachable');
           this.log.debug(error);
           if (error.response) {
             this.UpdateUI('No Data 3');
-            this.log.info('3-Service not reachable');
-            this.log.debug(JSON.stringify(error.response.data));
+						this.log.info('getDeviceData-3-Service not reachable');
+						this.log.debug('getDeviceData-error.respons.data: ' + JSON.stringify(error.response.data));
           }
         });
     });

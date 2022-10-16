@@ -120,6 +120,10 @@ export class IntexThermostat implements AccessoryPlugin {
     //Characteristic.CurrentHeatingCoolingState.HEAT = 1;
     //Characteristic.CurrentHeatingCoolingState.COOL = 2;
 
+    //Test
+    //this.thermostatService.getCharacteristic(this.Characteristic.CurrentRelativeHumidity).updateValue(13);
+    //this.thermostatService.getCharacteristic(this.Characteristic.TargetRelativeHumidity).updateValue(20);
+
     this.informationService = new hap.Service.AccessoryInformation()
       .setCharacteristic(hap.Characteristic.Manufacturer, this.config.manufacturer)
       .setCharacteristic(hap.Characteristic.Model, this.config.model)
