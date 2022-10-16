@@ -1,5 +1,4 @@
 {
-  "private": false,
   "displayName": "Homebridge Intex",
   "name": "homebridge-intex",
   "author": "DrHeck",
@@ -15,6 +14,7 @@
     "type": "git",
     "url": "git://github.com/drheck/homebridge-intex.git"
   },
+	"private": false,
 	"publishConfig": {
   "access": "public"
 	},
