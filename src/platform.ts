@@ -98,11 +98,9 @@ The set of exposed accessories CANNOT change over the lifetime of the plugin!
     callback([
       new IntexSwitch(hap, this.log, 'Filter', this.mSPA, this.config),
       new IntexSwitch(hap, this.log, 'Bubbles', this.mSPA, this.config),
-      /* ToDo: Waterjet
 			new IntexSwitch(hap, this.log, "Waterjet", this.mSPA, this.config),
 			new IntexSwitch(hap, this.log, "Sanitizer", this.mSPA, this.config),
 			new IntexSwitch(hap, this.log, "Controller", this.mSPA, this.config),
-			*/
       new IntexThermostat(hap, this.log, 'Thermostat', this.mSPA, this.config),
       new IntexTempSensor(hap, this.log, 'Temperatur', this.mSPA, this.config, this.api),
     ]);

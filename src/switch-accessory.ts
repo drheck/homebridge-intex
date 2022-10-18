@@ -14,11 +14,11 @@ import {
 import { DPHIntex } from './dph_intex_Api';
 
 //Commands
-//const CONTROLLER_ONOFF = 1;
+const CONTROLLER_ONOFF = 1;
 const FILTER_ONOFF = 2;
-//const WATER_JET_ONOFF = 8;
+const WATER_JET_ONOFF = 8;
 const BUBBLE_ONOFF = 10;
-//const SANITIZER_ONOFF = 20;
+const SANITIZER_ONOFF = 20;
 
 export class IntexSwitch implements AccessoryPlugin {
 
@@ -46,7 +46,6 @@ export class IntexSwitch implements AccessoryPlugin {
       log.debug('Switch (' + name + ') is not created');
       return;
     }
-    /* ToDo: Waterjet
 		if (name === "Waterjet" && config.Waterjet === false) {
 			log.debug("Switch (" + name + ") is not created");
 			return;
@@ -59,8 +58,8 @@ export class IntexSwitch implements AccessoryPlugin {
 			log.debug("Switch (" + name + ") is not created");
 			return;
 		}
-*/
-    this.Characteristic = hap.Characteristic;
+
+		this.Characteristic = hap.Characteristic;
 
     this.switchService = new hap.Service.Switch(name);
     this.switchService.getCharacteristic(hap.Characteristic.On)
@@ -79,14 +78,12 @@ export class IntexSwitch implements AccessoryPlugin {
         } else if (name === 'Filter') {
           mrSPA.execCommand(FILTER_ONOFF, this.switchOn);
         }
-        /* ToDo: Waterjet
 				else if (name === "Waterjet")
 					mrSPA.execCommand(WATER_JET_ONOFF, this.switchOn);
 				else if (name === "Sanitizer")
 					mrSPA.execCommand(SANITIZER_ONOFF, this.switchOn);
 				else if (name === "Controller")
 					mrSPA.execCommand(CONTROLLER_ONOFF, this.switchOn);
-*/
 
         callback();
       });
@@ -100,16 +97,14 @@ export class IntexSwitch implements AccessoryPlugin {
     if (name === 'Bubbles') {
       mrSPA._swBubbles = this;
     } else if (name === 'Filter') {
-      mrSPA._swPump = this;
+      mrSPA._swFilter = this;
     }
-    /* ToDo: Waterjet
 		else if (name === "Waterjet")
 			mrSPA._swWaterjet = this;
 		else if (name === "Sanitizer")
 			mrSPA._swSanitizer = this;
 		else if (name === "Controller")
 			mrSPA._swController = this;
-*/
 
     log.info('Intex switch \'%s\' created!', name);
   }

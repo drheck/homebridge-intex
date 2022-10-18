@@ -1,5 +1,5 @@
 import {
-  Logging
+  Logging,
 } from 'homebridge';
 
 import { IntexSwitch } from './switch-accessory';
@@ -8,6 +8,14 @@ import { IntexTempSensor } from './tempsensor-accessory';
 
 //import axios from 'axios';
 import axios, { AxiosInstance} from 'axios';
+
+//Status
+const CONTROLLER_ON = 0x01;
+const FILTER_ON = 0x02;
+const HEATER_ON = 0x04;
+const WATER_JET_ON = 0x08;
+const BUBBLE_ON = 0x10;
+const SANITIZER_ON = 0x20;
 
 //Commands
 const CONTROLLER_ONOFF = 1;
@@ -29,14 +37,12 @@ const URL = 'https://intexiotappservice.azurewebsites.net/';
 
 export class DPHIntex {
   //private FakeGatoHistoryService = require('fakegato-history')(homebridge);
-	public _Thermostat: IntexThermostat;
-  public _swPump: IntexSwitch;
+  public _Thermostat: IntexThermostat;
+  public _swFilter: IntexSwitch;
   public _swBubbles: IntexSwitch;
-  /* ToDo: Waterjet
 	public _swWaterjet: IntexSwitch;
 	public _swSanitizer: IntexSwitch;
 	public _swController: IntexSwitch;
-	*/
 
   public _tsSPA: IntexTempSensor;
 
@@ -44,13 +50,11 @@ export class DPHIntex {
 
   //public _Testmode: boolean; //ToDo: in testmode no commands - only logs
   public mBubbles: boolean;
-  public mPump: boolean;
-  /* ToDo: Waterjet
+  public mFilter: boolean;
 	public mWaterjet: boolean;
 	public mSanitizer: boolean;
 	public mController: boolean;
-	*/
-  public mHeater: boolean;
+	public mHeater: boolean;
   public mcurTemp: number;
   public mpresetTemp: number;
   //	Characteristic.TemperatureDisplayUnits.CELSIUS = 0;
@@ -79,17 +83,15 @@ export class DPHIntex {
     this.interval = interval;
     //this.deviceArray = new Array();
 
-    this.mBubbles = false;
-    this.mPump = false;
-    /* ToDo: Waterjet
+		this.mBubbles = false;
+    this.mFilter = false;
 		this.mWaterjet = false;
 		this.mSanitizer = false;
 		this.mController = false;
-		*/
     this.mHeater = false;
     this.mcurTemp = 0;
     this.mpresetTemp = 10;
-    this.mTempUnit = 0;
+		this.mTempUnit = 0;	//= TemperatureDisplayUnits.CELSIUS
     this.log.info('End Create Intex');
   }
 
@@ -100,16 +102,16 @@ export class DPHIntex {
       this._tsSPA.handleCurrentTemperatureSet(-1);
     } else {
       this._Thermostat.handleCurrentTemperatureSet(this.mcurTemp);
-      this._tsSPA.handleCurrentTemperatureSet(this.mcurTemp);
+			this._tsSPA.handleCurrentTemperatureSet(this.mcurTemp);
+			this._tsSPA.handleTemperatureDisplayUnitsSet(this.mTempUnit);
       this._Thermostat.handleTargetTemperatureSet(this.mpresetTemp);
       this._Thermostat.handleCurrentHeatingCoolingStateSet(this.mHeater);
       this._swBubbles.handleSwitchSet(this.mBubbles);
-      this._swPump.handleSwitchSet(this.mPump);
-      /* ToDo: Waterjet
+			this._swFilter.handleSwitchSet(this.mFilter);
+			this._Thermostat.handleTemperatureDisplayUnitsSet(this.mTempUnit);
 			this._swSanitizer.handleSwitchSet(this.mSanitizer);
 			this._swWaterjet.handleSwitchSet(this.mWaterjet);
 			this._swController.handleSwitchSet(this.mController);
-			*/
     }
     if (error.length === 0) {
       error = 'Ok';
@@ -139,7 +141,7 @@ export class DPHIntex {
           }),
         })
           .then((res) => {
-						this.log('posCommand-res.data: ', JSON.stringify(res.data));
+            this.log('posCommand-res.data: ', JSON.stringify(res.data));
             return res.data;
           })
           .catch((error) => {
@@ -157,8 +159,8 @@ export class DPHIntex {
       }, 5000,
       );
 
-			this.updateInterval = setInterval(async () => {
-				this.log.debug('posCommand-updateInterval =', this.updateInterval);
+      this.updateInterval = setInterval(async () => {
+        this.log.debug('posCommand-updateInterval =', this.updateInterval);
         await this.getDeviceData();
       }, this.interval * 60 * 1000);
     }
@@ -274,12 +276,12 @@ export class DPHIntex {
     await this.login();
 
     if (this.session.token) {
-			await this.getDeviceList();
-			this.log('onReady');
+      await this.getDeviceList();
+      this.log('onReady');
       await this.getDeviceData();
 
-			this.updateInterval = setInterval(async () => {
-				this.log.debug('onReady-updateInterval = ', this.updateInterval);
+      this.updateInterval = setInterval(async () => {
+        this.log.debug('onReady-updateInterval = ', this.updateInterval);
         await this.getDeviceData();
       }, this.interval * 60 * 1000);
       this.refreshTokenInterval = setInterval(() => {
@@ -386,8 +388,8 @@ export class DPHIntex {
         }
       })
       .catch((error) => {
-				this.log('getDeviceList-error: ' + error);
-				error.response && this.log('getDeviceList-error.response.data: ' + JSON.stringify(error.response.data));
+        this.log('getDeviceList-error: ' + error);
+        error.response && this.log('getDeviceList-error.response.data: ' + JSON.stringify(error.response.data));
       });
   }
 
@@ -409,7 +411,7 @@ export class DPHIntex {
           //					this.log('*************************************************************************');
           //					this.log.debug('Status: ' + deviceId);
           this.log.debug(JSON.stringify(res.data));
-          await this.sleep(2000);
+          await this.sleep(5000);
           await this.requestClient({
             method: 'GET',
             url: URL + 'api/v1/device/command/feedback/' + deviceId + '/' + sid,
@@ -417,33 +419,33 @@ export class DPHIntex {
           })
             .then(async (res) => {
               if (res.data && res.data.result === 'ok') {
-                //								this.log('*************************************************************************');
-                //								this.log('Feedback: ' + deviceId);
-                //                            this.log(JSON.stringify(res.data));
-                const erg = res.data.data;
-                //								this.log('ResultStr: ' + erg);
+								const returnValue = Buffer.from(res.data.data, 'hex');
 
-                this.mBubbles = erg.substr(10, 1);
-                /* ToDo: Waterjet
-								this.mWaterjet = erg.substr(10, 1);
-								this.mSanitizer = erg.substr(10, 1);
-								this.mController = erg.substr(10, 1);
-								*/
-                this.mPump = this.getPumpState(parseInt(erg.substr(11, 1)));
-                this.mHeater = this.getHeatingState(parseInt(erg.substr(11, 1)));
-                this.mcurTemp = parseInt(erg.substr(14, 2), 16);
-                if (this.mcurTemp >= 10 && this.mcurTemp <= 40) {
+								this.mBubbles = ((returnValue.readUInt8(0x05) & BUBBLE_ON) == BUBBLE_ON);
+								this.mFilter = ((returnValue.readUInt8(0x05) & FILTER_ON) == FILTER_ON);
+								this.mHeater = ((returnValue.readUInt8(0x05) & HEATER_ON) == HEATER_ON);
+								this.mWaterjet = ((returnValue.readUInt8(0x05) & WATER_JET_ON) == WATER_JET_ON);
+								this.mSanitizer = ((returnValue.readUInt8(0x05) & SANITIZER_ON) == SANITIZER_ON);
+								this.mController = ((returnValue.readUInt8(0x05) & CONTROLLER_ON) == CONTROLLER_ON);
+
+								this.mcurTemp = returnValue.readUInt8(0x07);
+								this.mpresetTemp = returnValue.readUInt8(0x0f);
+								if (this.mcurTemp >= 10 && this.mcurTemp < 50) {
                   this.mTempUnit = 0;
                 } else if (this.mcurTemp >= 50 && this.mcurTemp <= 104) {
                   this.mTempUnit = 1;
                 }
-                this.mpresetTemp = parseInt(erg.substr(30, 2), 16);
 
-                this.log('Bubbles: ' + erg.substr(10, 1));
-                this.log('Panel/Pump: ' + erg.substr(11, 1) + ' = ' + this.getPumpState(parseInt(erg.substr(11, 1))));
-                this.log('Heating: ' + this.getHeatingState(parseInt(erg.substr(11, 1))));
-                this.log('current temp: ' + parseInt(erg.substr(14, 2), 16));
-                this.log('preset temp: ' + parseInt(erg.substr(30, 2), 16));
+								this.log('Controller: ' + this.mController);
+								this.log('Filter: ' + this.mFilter);
+								this.log('Heater: ' + this.mHeater);
+								this.log('Bubbles: ' + this.mBubbles);
+								this.log('Temp: ' + this.mcurTemp);
+								this.log('PresetTemp: ' + this.mpresetTemp);
+								if (this.mTempUnit == 0)
+									this.log('TempUnit: Celsius');
+								else
+									this.log('TempUnit: Fahrenheit');
 
                 this.UpdateUI('');
               }
@@ -451,26 +453,26 @@ export class DPHIntex {
             .catch((error) => {
               this.log.debug(error);
               if (error.response) {
-								this.log.info('getDeviceData-Feedback not reachable');
+                this.log.info('getDeviceData-Feedback not reachable');
                 this.UpdateUI('No Data 1');
-                this.log.debug(JSON.stringify(error.response.data));
+								this.log.debug('getDeviceData-error.response.data: ' + JSON.stringify(error.response.data));
               }
             });
         })
         .catch((error) => {
           if (error.response && error.response.status >= 500) {
-						this.log('getDeviceData-Status not reachable >= 500');
+            this.log('getDeviceData-Status not reachable >= 500');
             this.UpdateUI('No Data');
-						error.response && this.log.debug('getDeviceData-error.respons.data: ' + JSON.stringify(error.response.data));
+            error.response && this.log.debug('getDeviceData-error.response.data: ' + JSON.stringify(error.response.data));
             return;
           }
           this.UpdateUI('No Data 2');
-					this.log.info('getDeviceData-2-Service not reachable');
+          this.log.info('getDeviceData-2-Service not reachable');
           this.log.debug(error);
           if (error.response) {
             this.UpdateUI('No Data 3');
-						this.log.info('getDeviceData-3-Service not reachable');
-						this.log.debug('getDeviceData-error.respons.data: ' + JSON.stringify(error.response.data));
+            this.log.info('getDeviceData-3-Service not reachable');
+            this.log.debug('getDeviceData-error.response.data: ' + JSON.stringify(error.response.data));
           }
         });
     });
