@@ -421,12 +421,12 @@ export class DPHIntex {
               if (res.data && res.data.result === 'ok') {
 								const returnValue = Buffer.from(res.data.data, 'hex');
 
-								this.mBubbles = ((returnValue.readUInt8(0x05) & BUBBLE_ON) == BUBBLE_ON);
-								this.mFilter = ((returnValue.readUInt8(0x05) & FILTER_ON) == FILTER_ON);
-								this.mHeater = ((returnValue.readUInt8(0x05) & HEATER_ON) == HEATER_ON);
-								this.mWaterjet = ((returnValue.readUInt8(0x05) & WATER_JET_ON) == WATER_JET_ON);
-								this.mSanitizer = ((returnValue.readUInt8(0x05) & SANITIZER_ON) == SANITIZER_ON);
-								this.mController = ((returnValue.readUInt8(0x05) & CONTROLLER_ON) == CONTROLLER_ON);
+								this.mBubbles = ((returnValue.readUInt8(0x05) & BUBBLE_ON) === BUBBLE_ON);
+								this.mFilter = ((returnValue.readUInt8(0x05) & FILTER_ON) === FILTER_ON);
+								this.mHeater = ((returnValue.readUInt8(0x05) & HEATER_ON) === HEATER_ON);
+								this.mWaterjet = ((returnValue.readUInt8(0x05) & WATER_JET_ON) === WATER_JET_ON);
+								this.mSanitizer = ((returnValue.readUInt8(0x05) & SANITIZER_ON) === SANITIZER_ON);
+								this.mController = ((returnValue.readUInt8(0x05) & CONTROLLER_ON) === CONTROLLER_ON);
 
 								this.mcurTemp = returnValue.readUInt8(0x07);
 								this.mpresetTemp = returnValue.readUInt8(0x0f);
@@ -442,7 +442,7 @@ export class DPHIntex {
 								this.log('Bubbles: ' + this.mBubbles);
 								this.log('Temp: ' + this.mcurTemp);
 								this.log('PresetTemp: ' + this.mpresetTemp);
-								if (this.mTempUnit == 0)
+								if (this.mTempUnit === 0)
 									this.log('TempUnit: Celsius');
 								else
 									this.log('TempUnit: Fahrenheit');
