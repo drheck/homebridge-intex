@@ -52,6 +52,21 @@
 				"description": "Creates a Bubbles ON/OFF button",
 				"default": true
 			},
+			"Waterjet": {
+				"title": "Show Waterjet Button",
+				"type": "boolean",
+				"description": "Creates a Waterjet ON/OFF button",
+			},
+			"Sanitizer": {
+				"title": "Show Sanitizer Button",
+				"type": "boolean",
+				"description": "Creates a Sanitizer ON/OFF button"
+			},
+			"Controller": {
+				"title": "Show Controller Button",
+				"type": "boolean",
+				"description": "Creates a Controller ON/OFF button",
+			},
 			"debug": {
 				"title": "Debug logging",
 				"type": "boolean",
@@ -93,7 +108,10 @@
 			"expandable": true,
 			"items": [
 				"Filter",
-				"Bubbles"
+				"Bubbles",
+				"Waterjet",
+				"Sanitizer",
+				"Controller"
 			]
 		},
 		{
