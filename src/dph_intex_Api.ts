@@ -40,9 +40,9 @@ export class DPHIntex {
   public _Thermostat: IntexThermostat;
   public _swFilter: IntexSwitch;
   public _swBubbles: IntexSwitch;
-	public _swWaterjet: IntexSwitch;
-	public _swSanitizer: IntexSwitch;
-	public _swController: IntexSwitch;
+  public _swWaterjet: IntexSwitch;
+  public _swSanitizer: IntexSwitch;
+  public _swController: IntexSwitch;
 
   public _tsSPA: IntexTempSensor;
 
@@ -51,10 +51,10 @@ export class DPHIntex {
   //public _Testmode: boolean; //ToDo: in testmode no commands - only logs
   public mBubbles: boolean;
   public mFilter: boolean;
-	public mWaterjet: boolean;
-	public mSanitizer: boolean;
-	public mController: boolean;
-	public mHeater: boolean;
+  public mWaterjet: boolean;
+  public mSanitizer: boolean;
+  public mController: boolean;
+  public mHeater: boolean;
   public mcurTemp: number;
   public mpresetTemp: number;
   //	Characteristic.TemperatureDisplayUnits.CELSIUS = 0;
@@ -83,15 +83,15 @@ export class DPHIntex {
     this.interval = interval;
     //this.deviceArray = new Array();
 
-		this.mBubbles = false;
+    this.mBubbles = false;
     this.mFilter = false;
-		this.mWaterjet = false;
-		this.mSanitizer = false;
-		this.mController = false;
+    this.mWaterjet = false;
+    this.mSanitizer = false;
+    this.mController = false;
     this.mHeater = false;
     this.mcurTemp = 0;
     this.mpresetTemp = 10;
-		this.mTempUnit = 0;	//= TemperatureDisplayUnits.CELSIUS
+    this.mTempUnit = 0;	//= TemperatureDisplayUnits.CELSIUS
     this.log.info('End Create Intex');
   }
 
@@ -102,16 +102,16 @@ export class DPHIntex {
       this._tsSPA.handleCurrentTemperatureSet(-1);
     } else {
       this._Thermostat.handleCurrentTemperatureSet(this.mcurTemp);
-			this._tsSPA.handleCurrentTemperatureSet(this.mcurTemp);
-			this._tsSPA.handleTemperatureDisplayUnitsSet(this.mTempUnit);
+      this._tsSPA.handleCurrentTemperatureSet(this.mcurTemp);
+      this._tsSPA.handleTemperatureDisplayUnitsSet(this.mTempUnit);
       this._Thermostat.handleTargetTemperatureSet(this.mpresetTemp);
       this._Thermostat.handleCurrentHeatingCoolingStateSet(this.mHeater);
       this._swBubbles.handleSwitchSet(this.mBubbles);
-			this._swFilter.handleSwitchSet(this.mFilter);
-			this._Thermostat.handleTemperatureDisplayUnitsSet(this.mTempUnit);
-			this._swSanitizer.handleSwitchSet(this.mSanitizer);
-			this._swWaterjet.handleSwitchSet(this.mWaterjet);
-			this._swController.handleSwitchSet(this.mController);
+      this._swFilter.handleSwitchSet(this.mFilter);
+      this._Thermostat.handleTemperatureDisplayUnitsSet(this.mTempUnit);
+      this._swSanitizer.handleSwitchSet(this.mSanitizer);
+      this._swWaterjet.handleSwitchSet(this.mWaterjet);
+      this._swController.handleSwitchSet(this.mController);
     }
     if (error.length === 0) {
       error = 'Ok';
@@ -419,33 +419,39 @@ export class DPHIntex {
           })
             .then(async (res) => {
               if (res.data && res.data.result === 'ok') {
-								const returnValue = Buffer.from(res.data.data, 'hex');
+                const returnValue = Buffer.from(res.data.data, 'hex');
 
-								this.mBubbles = ((returnValue.readUInt8(0x05) & BUBBLE_ON) === BUBBLE_ON);
-								this.mFilter = ((returnValue.readUInt8(0x05) & FILTER_ON) === FILTER_ON);
-								this.mHeater = ((returnValue.readUInt8(0x05) & HEATER_ON) === HEATER_ON);
-								this.mWaterjet = ((returnValue.readUInt8(0x05) & WATER_JET_ON) === WATER_JET_ON);
-								this.mSanitizer = ((returnValue.readUInt8(0x05) & SANITIZER_ON) === SANITIZER_ON);
-								this.mController = ((returnValue.readUInt8(0x05) & CONTROLLER_ON) === CONTROLLER_ON);
+                this.mBubbles = ((returnValue.readUInt8(0x05) & BUBBLE_ON) === BUBBLE_ON);
+                this.mFilter = ((returnValue.readUInt8(0x05) & FILTER_ON) === FILTER_ON);
+                this.mHeater = ((returnValue.readUInt8(0x05) & HEATER_ON) === HEATER_ON);
+                this.mWaterjet = ((returnValue.readUInt8(0x05) & WATER_JET_ON) === WATER_JET_ON);
+                this.mSanitizer = ((returnValue.readUInt8(0x05) & SANITIZER_ON) === SANITIZER_ON);
+                this.mController = ((returnValue.readUInt8(0x05) & CONTROLLER_ON) === CONTROLLER_ON);
 
-								this.mcurTemp = returnValue.readUInt8(0x07);
-								this.mpresetTemp = returnValue.readUInt8(0x0f);
-								if (this.mcurTemp >= 10 && this.mcurTemp < 50) {
+                this.mcurTemp = returnValue.readUInt8(0x07);
+                this.mpresetTemp = returnValue.readUInt8(0x0f);
+                if (this.mcurTemp > 110) {
+                  this.mcurTemp = -1;
+                }
+                if (this.mcurTemp >= 10 && this.mcurTemp < 50) {
                   this.mTempUnit = 0;
                 } else if (this.mcurTemp >= 50 && this.mcurTemp <= 104) {
                   this.mTempUnit = 1;
                 }
 
-								this.log('Controller: ' + this.mController);
-								this.log('Filter: ' + this.mFilter);
-								this.log('Heater: ' + this.mHeater);
-								this.log('Bubbles: ' + this.mBubbles);
-								this.log('Temp: ' + this.mcurTemp);
-								this.log('PresetTemp: ' + this.mpresetTemp);
-								if (this.mTempUnit === 0)
-									this.log('TempUnit: Celsius');
-								else
-									this.log('TempUnit: Fahrenheit');
+                this.log('Controller: ' + this.mController);
+                this.log('Filter: ' + this.mFilter);
+                this.log('Heater: ' + this.mHeater);
+                this.log('Bubbles: ' + this.mBubbles);
+                this.log('Waterjet: ' + this.mWaterjet);
+                this.log('Sanitizer: ' + this.mSanitizer);
+                this.log('Temp: ' + this.mcurTemp);
+                this.log('PresetTemp: ' + this.mpresetTemp);
+                if (this.mTempUnit === 0) {
+                  this.log('TempUnit: Celsius');
+                } else {
+                  this.log('TempUnit: Fahrenheit');
+                }
 
                 this.UpdateUI('');
               }
@@ -455,7 +461,7 @@ export class DPHIntex {
               if (error.response) {
                 this.log.info('getDeviceData-Feedback not reachable');
                 this.UpdateUI('No Data 1');
-								this.log.debug('getDeviceData-error.response.data: ' + JSON.stringify(error.response.data));
+                this.log.debug('getDeviceData-error.response.data: ' + JSON.stringify(error.response.data));
               }
             });
         })

@@ -43,7 +43,7 @@ export class IntexTempSensor implements AccessoryPlugin {
     this.tempsensorService = new hap.Service.TemperatureSensor(name);
     this.tempsensorService.getCharacteristic(this.Characteristic.CurrentTemperature).setProps({
       minValue: -10,
-      maxValue: 50,
+      maxValue: 200,
     });
 
     // create handlers for required characteristics
@@ -105,25 +105,25 @@ export class IntexTempSensor implements AccessoryPlugin {
     //temp: this.temperature, pressure: this.airPressure, humidity: this.humidity});
   }
 
-	/**
+  /**
    * Handle requests to get the current value of the "Temperature Display Units" characteristic
    */
-	handleTemperatureDisplayUnitsGet() {
-		this.log.debug('Triggered GET TemperatureDisplayUnits');
+  handleTemperatureDisplayUnitsGet() {
+    this.log.debug('Triggered GET TemperatureDisplayUnits');
 
-		// set this to a valid value for TemperatureDisplayUnits
-		const currentValue = this.Characteristic.TemperatureDisplayUnits.CELSIUS;
+    // set this to a valid value for TemperatureDisplayUnits
+    const currentValue = this.Characteristic.TemperatureDisplayUnits.CELSIUS;
 
-		return currentValue;
-	}
+    return currentValue;
+  }
 
   /**
    * Handle requests to set the "Temperature Display Units" characteristic
    */
-	handleTemperatureDisplayUnitsSet(value) {
-		this.log.debug('Triggered SET TemperatureDisplayUnits:', value);
-		this.tempsensorService.getCharacteristic(this.Characteristic.TemperatureDisplayUnits).setValue(value);
-	}
+  handleTemperatureDisplayUnitsSet(value) {
+    this.log.debug('Triggered SET TemperatureDisplayUnits:', value);
+    this.tempsensorService.getCharacteristic(this.Characteristic.TemperatureDisplayUnits).setValue(value);
+  }
 
   /*
    * This method is optional to implement. It is called when HomeKit ask to identify the accessory.

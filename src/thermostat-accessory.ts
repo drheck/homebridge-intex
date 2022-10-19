@@ -229,8 +229,8 @@ export class IntexThermostat implements AccessoryPlugin {
    * Handle requests to set the "Temperature Display Units" characteristic
    */
   handleTemperatureDisplayUnitsSet(value) {
-		this.log.debug('Triggered SET TemperatureDisplayUnits:', value);
-		this.thermostatService.getCharacteristic(this.Characteristic.TemperatureDisplayUnits).setValue(value);
+    this.log.debug('Triggered SET TemperatureDisplayUnits:', value);
+    this.thermostatService.getCharacteristic(this.Characteristic.TemperatureDisplayUnits).setValue(value);
   }
 
   /*

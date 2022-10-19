@@ -46,20 +46,20 @@ export class IntexSwitch implements AccessoryPlugin {
       log.debug('Switch (' + name + ') is not created');
       return;
     }
-		if (name === "Waterjet" && config.Waterjet === false) {
-			log.debug("Switch (" + name + ") is not created");
-			return;
-		}
-		if (name === "Sanitizer" && config.Sanitizer === false) {
-			log.debug("Switch (" + name + ") is not created");
-			return;
-		}
-		if (name === "Controller" && config.Controller === false) {
-			log.debug("Switch (" + name + ") is not created");
-			return;
-		}
+    if (name === 'Waterjet' && config.Waterjet === false) {
+      log.debug('Switch (' + name + ') is not created');
+      return;
+    }
+    if (name === 'Sanitizer' && config.Sanitizer === false) {
+      log.debug('Switch (' + name + ') is not created');
+      return;
+    }
+    if (name === 'Controller' && config.Controller === false) {
+      log.debug('Switch (' + name + ') is not created');
+      return;
+    }
 
-		this.Characteristic = hap.Characteristic;
+    this.Characteristic = hap.Characteristic;
 
     this.switchService = new hap.Service.Switch(name);
     this.switchService.getCharacteristic(hap.Characteristic.On)
@@ -77,13 +77,13 @@ export class IntexSwitch implements AccessoryPlugin {
           mrSPA.execCommand(BUBBLE_ONOFF, this.switchOn);
         } else if (name === 'Filter') {
           mrSPA.execCommand(FILTER_ONOFF, this.switchOn);
+        } else if (name === 'Waterjet') {
+          mrSPA.execCommand(WATER_JET_ONOFF, this.switchOn);
+        } else if (name === 'Sanitizer') {
+          mrSPA.execCommand(SANITIZER_ONOFF, this.switchOn);
+        } else if (name === 'Controller') {
+          mrSPA.execCommand(CONTROLLER_ONOFF, this.switchOn);
         }
-				else if (name === "Waterjet")
-					mrSPA.execCommand(WATER_JET_ONOFF, this.switchOn);
-				else if (name === "Sanitizer")
-					mrSPA.execCommand(SANITIZER_ONOFF, this.switchOn);
-				else if (name === "Controller")
-					mrSPA.execCommand(CONTROLLER_ONOFF, this.switchOn);
 
         callback();
       });
@@ -98,13 +98,13 @@ export class IntexSwitch implements AccessoryPlugin {
       mrSPA._swBubbles = this;
     } else if (name === 'Filter') {
       mrSPA._swFilter = this;
+    } else if (name === 'Waterjet') {
+      mrSPA._swWaterjet = this;
+    } else if (name === 'Sanitizer') {
+      mrSPA._swSanitizer = this;
+    } else if (name === 'Controller') {
+      mrSPA._swController = this;
     }
-		else if (name === "Waterjet")
-			mrSPA._swWaterjet = this;
-		else if (name === "Sanitizer")
-			mrSPA._swSanitizer = this;
-		else if (name === "Controller")
-			mrSPA._swController = this;
 
     log.info('Intex switch \'%s\' created!', name);
   }
