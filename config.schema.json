@@ -55,7 +55,7 @@
 			"Waterjet": {
 				"title": "Show Waterjet Button",
 				"type": "boolean",
-				"description": "Creates a Waterjet ON/OFF button",
+				"description": "Creates a Waterjet ON/OFF button"
 			},
 			"Sanitizer": {
 				"title": "Show Sanitizer Button",
@@ -65,7 +65,7 @@
 			"Controller": {
 				"title": "Show Controller Button",
 				"type": "boolean",
-				"description": "Creates a Controller ON/OFF button",
+				"description": "Creates a Controller ON/OFF button"
 			},
 			"debug": {
 				"title": "Debug logging",
