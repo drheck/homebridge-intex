@@ -2,22 +2,23 @@
   "displayName": "Homebridge Intex",
   "name": "homebridge-intex",
   "author": "DrHeck",
-  "version": "1.1.0",
+  "version": "1.1.2-beta.0",
   "description": "Publish your intex pool as an homekit platform",
   "license": "ISC",
   "files": [
     "LICENSE",
-    "dist"
+    "dist",
+    "config.schema.json"
   ],
   "homepage": "https://github.com/drheck/homebridge-intex",
   "repository": {
     "type": "git",
     "url": "git://github.com/drheck/homebridge-intex.git"
   },
-	"private": false,
-	"publishConfig": {
-  "access": "public"
-	},
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "bugs": {
     "url": "https://github.com/drheck/homebridge-intex/issues"
   },
