@@ -103,7 +103,6 @@ export class DPHIntex {
     } else {
       this._Thermostat.handleCurrentTemperatureSet(this.mcurTemp);
       this._tsSPA.handleCurrentTemperatureSet(this.mcurTemp);
-      this._tsSPA.handleTemperatureDisplayUnitsSet(this.mTempUnit);
       this._Thermostat.handleTargetTemperatureSet(this.mpresetTemp);
       this._Thermostat.handleCurrentHeatingCoolingStateSet(this.mHeater);
       this._swBubbles.handleSwitchSet(this.mBubbles);
@@ -430,16 +429,19 @@ export class DPHIntex {
 
                 this.mcurTemp = returnValue.readUInt8(0x07);
                 this.mpresetTemp = returnValue.readUInt8(0x0f);
-                if (this.mcurTemp > 110) {
-                  this.mcurTemp = -1;
+								if (this.mcurTemp > 110) {
+									this.log('ErrorTemp: ' + this.mcurTemp);
+                  this.mcurTemp = -2;
                 }
                 if (this.mcurTemp >= 10 && this.mcurTemp < 50) {
                   this.mTempUnit = 0;
                 } else if (this.mcurTemp >= 50 && this.mcurTemp <= 104) {
                   this.mTempUnit = 1;
-                }
+								}
+								if (this.mpresetTemp < 10)
+									this.mpresetTemp = 10;
 
-                this.log('Controller: ' + this.mController);
+								this.log('Controller: ' + this.mController);
                 this.log('Filter: ' + this.mFilter);
                 this.log('Heater: ' + this.mHeater);
                 this.log('Bubbles: ' + this.mBubbles);
