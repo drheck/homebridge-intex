@@ -2,7 +2,7 @@
   "displayName": "Homebridge Intex",
   "name": "homebridge-intex",
   "author": "DrHeck",
-  "version": "1.1.2-beta.0",
+  "version": "1.1.2-beta.2",
   "description": "Publish your intex pool as an homekit platform",
   "license": "ISC",
   "files": [
