@@ -407,9 +407,9 @@ export class DPHIntex {
         }),
       })
         .then(async (res) => {
-          //					this.log('*************************************************************************');
-          //					this.log.debug('Status: ' + deviceId);
-          this.log.debug(JSON.stringify(res.data));
+          this.log('*************************************************************************');
+          this.log.debug('Status: ' + deviceId);
+					this.log.debug('res.data: ' + JSON.stringify(res.data));
           await this.sleep(5000);
           await this.requestClient({
             method: 'GET',
@@ -418,6 +418,11 @@ export class DPHIntex {
           })
             .then(async (res) => {
               if (res.data && res.data.result === 'ok') {
+
+//								const erg = res.data.data;
+//								this.log('ResultStr: ' + erg);
+//								this.log('OLD: Panel/Pump: ' + erg.substr(11, 1) + ' = ' + this.getPumpState(parseInt(erg.substr(11, 1))));
+
                 const returnValue = Buffer.from(res.data.data, 'hex');
 
                 this.mBubbles = ((returnValue.readUInt8(0x05) & BUBBLE_ON) === BUBBLE_ON);
@@ -429,19 +434,20 @@ export class DPHIntex {
 
                 this.mcurTemp = returnValue.readUInt8(0x07);
                 this.mpresetTemp = returnValue.readUInt8(0x0f);
-								if (this.mcurTemp > 110) {
-									this.log('ErrorTemp: ' + this.mcurTemp);
+                if (this.mcurTemp > 110) {
+                  this.log('ErrorTemp: ' + this.mcurTemp);
                   this.mcurTemp = -2;
                 }
                 if (this.mcurTemp >= 10 && this.mcurTemp < 50) {
                   this.mTempUnit = 0;
                 } else if (this.mcurTemp >= 50 && this.mcurTemp <= 104) {
                   this.mTempUnit = 1;
-								}
-								if (this.mpresetTemp < 10)
-									this.mpresetTemp = 10;
+                }
+                if (this.mpresetTemp < 10) {
+                  this.mpresetTemp = 10;
+                }
 
-								this.log('Controller: ' + this.mController);
+                this.log('Controller: ' + this.mController);
                 this.log('Filter: ' + this.mFilter);
                 this.log('Heater: ' + this.mHeater);
                 this.log('Bubbles: ' + this.mBubbles);
