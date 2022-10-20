@@ -419,9 +419,9 @@ export class DPHIntex {
             .then(async (res) => {
               if (res.data && res.data.result === 'ok') {
 
-//								const erg = res.data.data;
-//								this.log('ResultStr: ' + erg);
-//								this.log('OLD: Panel/Pump: ' + erg.substr(11, 1) + ' = ' + this.getPumpState(parseInt(erg.substr(11, 1))));
+//const erg = res.data.data;
+//this.log('ResultStr: ' + erg);
+//this.log('OLD: Panel/Pump: ' + erg.substr(11, 1) + ' = ' + this.getPumpState(parseInt(erg.substr(11, 1))));
 
                 const returnValue = Buffer.from(res.data.data, 'hex');
 
