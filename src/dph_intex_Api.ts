@@ -37,6 +37,7 @@ const URL = 'https://intexiotappservice.azurewebsites.net/';
 
 export class DPHIntex {
   //private FakeGatoHistoryService = require('fakegato-history')(homebridge);
+	private _bUpdateisRunning: boolean;
   public _Thermostat: IntexThermostat;
   public _swFilter: IntexSwitch;
   public _swBubbles: IntexSwitch;
@@ -91,7 +92,9 @@ export class DPHIntex {
     this.mHeater = false;
     this.mcurTemp = 0;
     this.mpresetTemp = 10;
-    this.mTempUnit = 0;	//= TemperatureDisplayUnits.CELSIUS
+		this.mTempUnit = 0;	//= TemperatureDisplayUnits.CELSIUS
+
+		this._bUpdateisRunning = false;
     this.log.info('End Create Intex');
   }
 
@@ -392,7 +395,11 @@ export class DPHIntex {
       });
   }
 
-  async getDeviceData() {
+	async getDeviceData() {
+    if (this._bUpdateisRunning) {
+      return;
+    }
+		this._bUpdateisRunning = true;
     this.log('getDeviceData-start');
     this.deviceArray.forEach(async (deviceId) => {
       const sid = Date.now();
@@ -407,7 +414,6 @@ export class DPHIntex {
         }),
       })
         .then(async (res) => {
-          this.log('*************************************************************************');
           this.log.debug('Status: ' + deviceId);
 					this.log.debug('res.data: ' + JSON.stringify(res.data));
           await this.sleep(5000);
@@ -461,7 +467,8 @@ export class DPHIntex {
                   this.log('TempUnit: Fahrenheit');
                 }
 
-                this.UpdateUI('');
+								this.UpdateUI('');
+								this._bUpdateisRunning = false;
               }
             })
             .catch((error) => {
@@ -474,7 +481,8 @@ export class DPHIntex {
             });
         })
         .catch((error) => {
-          if (error.response && error.response.status >= 500) {
+					if (error.response && error.response.status >= 500) {
+						this._bUpdateisRunning = false;
             this.log('getDeviceData-Status not reachable >= 500');
             this.UpdateUI('No Data');
             error.response && this.log.debug('getDeviceData-error.response.data: ' + JSON.stringify(error.response.data));
@@ -489,6 +497,6 @@ export class DPHIntex {
             this.log.debug('getDeviceData-error.response.data: ' + JSON.stringify(error.response.data));
           }
         });
-    });
+		});
   }
 }
