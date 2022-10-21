@@ -1,10 +1,3 @@
-<p align="center">
-
-<img src="https://github.com/drheck/homebridge-intex/blob/master/doc/pool.PNG" width="150">
-<img src="https://github.com/homebridge/branding/raw/master/logos/homebridge-wordmark-logo-vertical.png" width="150">
-
-</p>
-
 # Homebridge Intex Plugin
 
 This is a Homebridge platform plugin for Intex Pools with WLAN.
@@ -31,6 +24,7 @@ This plugin can be added via the Web interface, or if you perfer the terminal: `
 Creating and maintaining Homebridge plugins consume a lot of time and effort and if you would like to share your appreciation, feel free to "Star" or donate.
 If you like this plugin and want to show your support then please star the Github repo, or better yet; buy me a drink :-).
 <a target="blank" href="https://www.paypal.me/drheck"><img src="https://img.shields.io/badge/PayPal-Donate-blue.svg?logo=paypal"/></a><br>
+
 Thank you!
 
 # Thanks

@@ -1,0 +1,13 @@
+{
+		"name": "myPool",
+		"model": "Bubble SPA V26310",
+		"username": "",
+		"password": "",
+		"Filter": true,
+		"Bubbles": true,
+		"Waterjet": true,
+		"Sanitizer": true,
+		"Controller": true,
+		"refreshInterval": 10,
+		"platform": "homebridge-intex"
+}
