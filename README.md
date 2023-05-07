@@ -23,6 +23,8 @@ This is, because the heater ON command starts only the heater.
 
 # Sampleconfig
 See the sample-config.json in the code directory.
+You must have installed the intex app on your smartphone and register an account in the app.
+Then use this account name and password in the plugin.
 
 # Installation
 This plugin can be added via the Web interface, or if you perfer the terminal: `npm install -g homebridge-intex`
