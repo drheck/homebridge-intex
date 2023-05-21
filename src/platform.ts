@@ -66,13 +66,14 @@ class IntexHomebridgePlatform implements StaticPlatformPlugin {
     // The poolApi object
     this.mSPA = new DPHIntex(log, this.username, this.password, this.interval);
 
-    log.info('Example platform finished initializing!');
+		log.info('IntexHomebridgePlatform finished initializing!');
   }
 
   protected async onFinishedLaunching(): Promise<void> {
     this.log.info('finished launching!');
     //get and initialize pool state
-    await this.mSPA.onReady();
+		if (this.interval !== 0)
+			await this.mSPA.onReady();
   }
 
   protected async onShutdown(): Promise<void> {

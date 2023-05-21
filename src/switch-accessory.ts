@@ -71,18 +71,23 @@ export class IntexSwitch implements AccessoryPlugin {
         this.switchOn = value as boolean;
         if (mrSPA._isUpdatingUI) {
           return;
-        }
-        log.debug('Switch (' + name + ') state was set to: ' + (this.switchOn ? 'ON' : 'OFF'));
-        if (name === 'Bubbles') {
-          mrSPA.execCommand(BUBBLE_ONOFF, this.switchOn);
-        } else if (name === 'Filter') {
-          mrSPA.execCommand(FILTER_ONOFF, this.switchOn);
-        } else if (name === 'Waterjet') {
-          mrSPA.execCommand(WATER_JET_ONOFF, this.switchOn);
-        } else if (name === 'Sanitizer') {
-          mrSPA.execCommand(SANITIZER_ONOFF, this.switchOn);
-        } else if (name === 'Controller') {
-          mrSPA.execCommand(CONTROLLER_ONOFF, this.switchOn);
+				}
+				this.log('Switch (' + name + ') state was set to: ' + (this.switchOn ? 'ON' : 'OFF'));
+				if (name === 'Bubbles') {
+					if (mrSPA.mBubbles !== this.switchOn)
+						mrSPA.execCommand(BUBBLE_ONOFF, this.switchOn);
+				} else if (name === 'Filter') {
+					if (mrSPA.mFilter !== this.switchOn)
+						mrSPA.execCommand(FILTER_ONOFF, this.switchOn);
+				} else if (name === 'Waterjet') {
+					if (mrSPA.mWaterjet !== this.switchOn)
+						mrSPA.execCommand(WATER_JET_ONOFF, this.switchOn);
+				} else if (name === 'Sanitizer') {
+					if (mrSPA.mSanitizer !== this.switchOn)
+						mrSPA.execCommand(SANITIZER_ONOFF, this.switchOn);
+				} else if (name === 'Controller') {
+					if (mrSPA.mController !== this.switchOn)
+						mrSPA.execCommand(CONTROLLER_ONOFF, this.switchOn);
         }
 
         callback();
@@ -92,7 +97,6 @@ export class IntexSwitch implements AccessoryPlugin {
       .setCharacteristic(hap.Characteristic.Manufacturer, this.config.manufacturer)
       .setCharacteristic(hap.Characteristic.Model, this.config.model)
       .setCharacteristic(hap.Characteristic.SerialNumber, 'SN_' + this.name);
-
 
     if (name === 'Bubbles') {
       mrSPA._swBubbles = this;
@@ -112,7 +116,7 @@ export class IntexSwitch implements AccessoryPlugin {
   /**
    * Handle requests to set the "Temperature Display Units" characteristic
    */
-  handleSwitchSet(value) {
+	handleSwitchSet(value) {
     this.log.debug('Triggered SET Switch ' + this.name + ': ', value);
     //this.switchService.getCharacteristic(this.Characteristic.On).updateValue(value);
     this.switchService.getCharacteristic(this.Characteristic.On).setValue(value);

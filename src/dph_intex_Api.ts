@@ -37,7 +37,7 @@ const URL = 'https://intexiotappservice.azurewebsites.net/';
 
 export class DPHIntex {
   //private FakeGatoHistoryService = require('fakegato-history')(homebridge);
-	private _bUpdateisRunning: boolean;
+  //private _bUpdateisRunning: boolean;
   public _Thermostat: IntexThermostat;
   public _swFilter: IntexSwitch;
   public _swBubbles: IntexSwitch;
@@ -92,9 +92,9 @@ export class DPHIntex {
     this.mHeater = false;
     this.mcurTemp = 0;
     this.mpresetTemp = 10;
-		this.mTempUnit = 0;	//= TemperatureDisplayUnits.CELSIUS
+    this.mTempUnit = 0;	//= TemperatureDisplayUnits.CELSIUS
 
-		this._bUpdateisRunning = false;
+    //this._bUpdateisRunning = false;
     this.log.info('End Create Intex');
   }
 
@@ -107,13 +107,13 @@ export class DPHIntex {
       this._Thermostat.handleCurrentTemperatureSet(this.mcurTemp);
       this._tsSPA.handleCurrentTemperatureSet(this.mcurTemp);
       this._Thermostat.handleTargetTemperatureSet(this.mpresetTemp);
-      this._Thermostat.handleCurrentHeatingCoolingStateSet(this.mHeater);
-      this._swBubbles.handleSwitchSet(this.mBubbles);
-      this._swFilter.handleSwitchSet(this.mFilter);
-      this._Thermostat.handleTemperatureDisplayUnitsSet(this.mTempUnit);
-      this._swSanitizer.handleSwitchSet(this.mSanitizer);
-      this._swWaterjet.handleSwitchSet(this.mWaterjet);
-      this._swController.handleSwitchSet(this.mController);
+			this._Thermostat.handleCurrentHeatingCoolingStateSet(this.mHeater);
+			if (this._swBubbles !== undefined) this._swBubbles.handleSwitchSet(this.mBubbles);
+			if (this._swFilter !== undefined) this._swFilter.handleSwitchSet(this.mFilter);
+			if (this.mTempUnit !== undefined) this._Thermostat.handleTemperatureDisplayUnitsSet(this.mTempUnit);
+			if (this._swSanitizer !== undefined) this._swSanitizer.handleSwitchSet(this.mSanitizer);
+			if (this._swWaterjet !== undefined) this._swWaterjet.handleSwitchSet(this.mWaterjet);
+			if (this._swController !== undefined) this._swController.handleSwitchSet(this.mController);
     }
     if (error.length === 0) {
       error = 'Ok';
@@ -162,7 +162,7 @@ export class DPHIntex {
       );
 
       this.updateInterval = setInterval(async () => {
-        this.log.debug('posCommand-updateInterval =', this.updateInterval);
+        this.log.debug('postCommand-updateInterval =', this.updateInterval);
         await this.getDeviceData();
       }, this.interval * 60 * 1000);
     }
@@ -395,11 +395,11 @@ export class DPHIntex {
       });
   }
 
-	async getDeviceData() {
-    if (this._bUpdateisRunning) {
-      return;
-    }
-		this._bUpdateisRunning = true;
+  async getDeviceData() {
+//    if (this._bUpdateisRunning) {
+//      return;
+//    }
+    //this._bUpdateisRunning = true;
     this.log('getDeviceData-start');
     this.deviceArray.forEach(async (deviceId) => {
       const sid = Date.now();
@@ -415,7 +415,7 @@ export class DPHIntex {
       })
         .then(async (res) => {
           this.log.debug('Status: ' + deviceId);
-					this.log.debug('res.data: ' + JSON.stringify(res.data));
+          this.log.debug('res.data: ' + JSON.stringify(res.data));
           await this.sleep(5000);
           await this.requestClient({
             method: 'GET',
@@ -425,9 +425,9 @@ export class DPHIntex {
             .then(async (res) => {
               if (res.data && res.data.result === 'ok') {
 
-//const erg = res.data.data;
-//this.log('ResultStr: ' + erg);
-//this.log('OLD: Panel/Pump: ' + erg.substr(11, 1) + ' = ' + this.getPumpState(parseInt(erg.substr(11, 1))));
+                //const erg = res.data.data;
+                //this.log('ResultStr: ' + erg);
+                //this.log('OLD: Panel/Pump: ' + erg.substr(11, 1) + ' = ' + this.getPumpState(parseInt(erg.substr(11, 1))));
 
                 const returnValue = Buffer.from(res.data.data, 'hex');
 
@@ -467,8 +467,8 @@ export class DPHIntex {
                   this.log('TempUnit: Fahrenheit');
                 }
 
-								this.UpdateUI('');
-								this._bUpdateisRunning = false;
+                this.UpdateUI('');
+                //this._bUpdateisRunning = false;
               }
             })
             .catch((error) => {
@@ -481,8 +481,8 @@ export class DPHIntex {
             });
         })
         .catch((error) => {
-					if (error.response && error.response.status >= 500) {
-						this._bUpdateisRunning = false;
+          if (error.response && error.response.status >= 500) {
+            //this._bUpdateisRunning = false;
             this.log('getDeviceData-Status not reachable >= 500');
             this.UpdateUI('No Data');
             error.response && this.log.debug('getDeviceData-error.response.data: ' + JSON.stringify(error.response.data));
@@ -497,6 +497,6 @@ export class DPHIntex {
             this.log.debug('getDeviceData-error.response.data: ' + JSON.stringify(error.response.data));
           }
         });
-		});
+    });
   }
 }
