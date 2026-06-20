@@ -136,7 +136,7 @@ export class DPHIntex {
 
 	async postCommand(send, commandname) {
 		//27.05.2024 Wenn Poll nicht verbunden keine Buttons ausführen. Automation bringt Ednlosschelief und reboot...
-		if (this.interval == 0)
+		if (this.interval === 0)
 			return;
 		//27.05.2024
     let deviceId = '';
@@ -164,7 +164,7 @@ export class DPHIntex {
           })
           .catch((error) => {
 						this.log('posCommand-Xerror: ' + error);
-						if (commandname == 'FILTER_ONOFF') {
+						if (commandname === 'FILTER_ONOFF') {
 							this.mError = 'FilterCommandError';
 							this._filtercesSPA.handleErrorsensorSet(true);
 						}
