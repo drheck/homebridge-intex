@@ -55,17 +55,20 @@
 			"Waterjet": {
 				"title": "Show Waterjet Button",
 				"type": "boolean",
-				"description": "Creates a Waterjet ON/OFF button"
+				"description": "Creates a Waterjet ON/OFF button",
+				"default": false
 			},
 			"Sanitizer": {
 				"title": "Show Sanitizer Button",
 				"type": "boolean",
-				"description": "Creates a Sanitizer ON/OFF button"
+				"description": "Creates a Sanitizer ON/OFF button",
+				"default": false
 			},
 			"Controller": {
 				"title": "Show Controller Button",
 				"type": "boolean",
-				"description": "Creates a Controller ON/OFF button"
+				"description": "Creates a Controller ON/OFF button",
+				"default": true
 			},
 			"debug": {
 				"title": "Debug logging",
@@ -73,7 +76,7 @@
 				"description": "Turns on additional logging (can be helpful for diagnosing issues)"
 			},
 			"refreshInterval": {
-				"title": "Refresh interval (minutes)",
+				"title": "Refresh interval (minutes) 0 = disable",
 				"type": "integer",
 				"default": 1
 			}
