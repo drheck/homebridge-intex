@@ -5,6 +5,7 @@ import {
 import { IntexSwitch } from './switch-accessory';
 import { IntexThermostat } from './thermostat-accessory';
 import { IntexTempSensor } from './tempsensor-accessory';
+import { IntexErrorSensor } from './tempsensor-accessory';
 
 //import axios from 'axios';
 import axios, { AxiosInstance} from 'axios';
@@ -45,7 +46,10 @@ export class DPHIntex {
   public _swSanitizer: IntexSwitch;
   public _swController: IntexSwitch;
 
-  public _tsSPA: IntexTempSensor;
+	public _tsSPA: IntexTempSensor;
+	public _esSPA: IntexErrorSensor;	//Error
+	public _cesSPA: IntexErrorSensor;	//Commanderror
+	public _filtercesSPA: IntexErrorSensor;	//FilterCommanderror
 
   public _isUpdatingUI: boolean;
 
@@ -60,7 +64,8 @@ export class DPHIntex {
   public mpresetTemp: number;
   //	Characteristic.TemperatureDisplayUnits.CELSIUS = 0;
   //	Characteristic.TemperatureDisplayUnits.FAHRENHEIT = 1;
-  public mTempUnit: number;
+	public mTempUnit: number;
+	public mError: string;
 
   username: string;
   password: string;
@@ -92,7 +97,8 @@ export class DPHIntex {
     this.mHeater = false;
     this.mcurTemp = 0;
     this.mpresetTemp = 10;
-    this.mTempUnit = 0;	//= TemperatureDisplayUnits.CELSIUS
+		this.mTempUnit = 0;	//= TemperatureDisplayUnits.CELSIUS
+		this.mError = "";
 
     //this._bUpdateisRunning = false;
     this.log.info('End Create Intex');
@@ -100,10 +106,16 @@ export class DPHIntex {
 
   UpdateUI(error: string) {
     //Update accessories if changed
-    this._isUpdatingUI = true;
-    if (error.length > 0) {
-      this._tsSPA.handleCurrentTemperatureSet(-1);
-    } else {
+		this._isUpdatingUI = true;
+		this.mError = error;	
+		if (error.length > 0) {
+			//Bewegungssensor aktvieren
+			this._esSPA.handleErrorsensorSet(true);
+			this._tsSPA.handleCurrentTemperatureSet(-1 * this.mcurTemp);
+		} else {
+			this._esSPA.handleErrorsensorSet(false);
+			this._filtercesSPA.handleErrorsensorSet(false);
+			this._cesSPA.handleErrorsensorSet(false);
       this._Thermostat.handleCurrentTemperatureSet(this.mcurTemp);
       this._tsSPA.handleCurrentTemperatureSet(this.mcurTemp);
       this._Thermostat.handleTargetTemperatureSet(this.mpresetTemp);
@@ -122,7 +134,11 @@ export class DPHIntex {
     this._isUpdatingUI = false;
   }
 
-  async postCommand(send) {
+	async postCommand(send, commandname) {
+		//27.05.2024 Wenn Poll nicht verbunden keine Buttons ausführen. Automation bringt Ednlosschelief und reboot...
+		if (this.interval == 0)
+			return;
+		//27.05.2024
     let deviceId = '';
     clearTimeout(this.updateInterval);
     try {
@@ -147,7 +163,15 @@ export class DPHIntex {
             return res.data;
           })
           .catch((error) => {
-            this.log('posCommand-Xerror: ' + error);
+						this.log('posCommand-Xerror: ' + error);
+						if (commandname == 'FILTER_ONOFF') {
+							this.mError = 'FilterCommandError';
+							this._filtercesSPA.handleErrorsensorSet(true);
+						}
+						else {
+							this.mError = 'CommandError';
+							this._cesSPA.handleErrorsensorSet(true);
+						}
             if (error.response) {
               this.log(JSON.stringify(error.response.data));
             }
@@ -213,10 +237,10 @@ export class DPHIntex {
     }
     if (command === SET_PRESETTEMP) {
       subcmd = this.getTempCommand(value);
-      this.postCommand(subcmd);
+      this.postCommand(subcmd, commandname);
     } else {
       subcmd = value;
-      this.postCommand(cmd);
+			this.postCommand(cmd, commandname);
     }
     this.log.info('execCommand: ' + commandname + ' - ' + cmd + ' - ' + subcmd + ' - ' + value);
     //this.UpdateUI('');
@@ -311,7 +335,8 @@ export class DPHIntex {
         this.session = res.data;
       })
       .catch((error) => {
-        this.log.info('error login: ' + error);
+				this.log.info('error login: ' + error);
+				this.mError = "LoginError";
         if (error.response) {
           this.log.debug(JSON.stringify(error.response.data));
         }
@@ -384,13 +409,15 @@ export class DPHIntex {
               }
             })
             .catch((error) => {
-              this.log.info('getDeviceList-for each error: ' + error);
+							this.log.info('getDeviceList-for each error: ' + error);
+							this.mError = "getDeviceListError1";
               error.response && this.log.debug(JSON.stringify(error.response.data));
             });
         }
       })
       .catch((error) => {
-        this.log('getDeviceList-error: ' + error);
+				this.log('getDeviceList-error: ' + error);
+				this.mError = "getDeviceListError";
         error.response && this.log('getDeviceList-error.response.data: ' + JSON.stringify(error.response.data));
       });
   }

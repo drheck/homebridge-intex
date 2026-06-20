@@ -39,23 +39,23 @@ export class IntexSwitch implements AccessoryPlugin {
     this.config = config;
     this.name = name;
     if (name === 'Filter' && config.Filter === false) {
-      log.debug('Switch (' + name + ') is not created');
+      log.info('Switch (' + name + ') is not created');
       return;
     }
     if (name === 'Bubbles' && config.Bubbles === false) {
-      log.debug('Switch (' + name + ') is not created');
+			this.log.info('Switch (' + name + ') is not created');
       return;
     }
     if (name === 'Waterjet' && config.Waterjet === false) {
-      log.debug('Switch (' + name + ') is not created');
+			this.log.info('Switch (' + name + ') is not created');
       return;
     }
     if (name === 'Sanitizer' && config.Sanitizer === false) {
-      log.debug('Switch (' + name + ') is not created');
+			this.log.info('Switch (' + name + ') is not created');
       return;
     }
     if (name === 'Controller' && config.Controller === false) {
-      log.debug('Switch (' + name + ') is not created');
+			this.log.info('Switch (' + name + ') is not created');
       return;
     }
 
@@ -96,8 +96,9 @@ export class IntexSwitch implements AccessoryPlugin {
     this.informationService = new hap.Service.AccessoryInformation()
       .setCharacteristic(hap.Characteristic.Manufacturer, this.config.manufacturer)
       .setCharacteristic(hap.Characteristic.Model, this.config.model)
-      .setCharacteristic(hap.Characteristic.SerialNumber, 'SN_' + this.name);
-
+			.setCharacteristic(hap.Characteristic.SerialNumber, 'SN_' + this.name)
+			.setCharacteristic(hap.Characteristic.FirmwareRevision, "1.1.4");
+				
     if (name === 'Bubbles') {
       mrSPA._swBubbles = this;
     } else if (name === 'Filter') {
@@ -110,7 +111,7 @@ export class IntexSwitch implements AccessoryPlugin {
       mrSPA._swController = this;
     }
 
-    log.info('Intex switch \'%s\' created!', name);
+    this.log.info('Intex switch \'%s\' created!', name);
   }
 
   /**

@@ -74,8 +74,9 @@ export class IntexThermostat implements AccessoryPlugin {
         if (mrSPA._isUpdatingUI) {
           return;
         }
-        log.debug('Thermostat TargetHeatingCoolingState was set to: ' + (this.thermostatOn ? 'ON' : 'OFF'));
-        mrSPA.execCommand(HEATER_ONOFF, this.thermostatOn);
+				log.debug('Thermostat TargetHeatingCoolingState was set to: ' + (this.thermostatOn ? 'ON' : 'OFF'));
+				if (mrSPA.mHeater !== this.thermostatOn)
+					mrSPA.execCommand(HEATER_ONOFF, this.thermostatOn);
         callback();
       });
 
@@ -127,7 +128,8 @@ export class IntexThermostat implements AccessoryPlugin {
     this.informationService = new hap.Service.AccessoryInformation()
       .setCharacteristic(hap.Characteristic.Manufacturer, this.config.manufacturer)
       .setCharacteristic(hap.Characteristic.Model, this.config.model)
-      .setCharacteristic(hap.Characteristic.SerialNumber, 'SN_' + this.name);
+			.setCharacteristic(hap.Characteristic.SerialNumber, 'SN_' + this.name)
+			.setCharacteristic(hap.Characteristic.FirmwareRevision, "1.1.4");
 
     mrSPA._Thermostat = this;
   }

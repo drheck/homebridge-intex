@@ -3,6 +3,7 @@ import { IntexSwitch } from './switch-accessory';
 import { IntexThermostat } from './thermostat-accessory';
 import { DPHIntex } from './dph_intex_Api';
 import { IntexTempSensor } from './tempsensor-accessory';
+import { IntexErrorSensor } from './tempsensor-accessory';
 
 const PLATFORM_NAME = 'homebridge-intex';
 
@@ -103,7 +104,10 @@ The set of exposed accessories CANNOT change over the lifetime of the plugin!
       new IntexSwitch(hap, this.log, 'Sanitizer', this.mSPA, this.config),
       new IntexSwitch(hap, this.log, 'Controller', this.mSPA, this.config),
       new IntexThermostat(hap, this.log, 'Thermostat', this.mSPA, this.config),
-      new IntexTempSensor(hap, this.log, 'Temperatur', this.mSPA, this.config, this.api),
+			new IntexTempSensor(hap, this.log, 'Temperatur', this.mSPA, this.config, this.api),
+			new IntexErrorSensor(hap, this.log, 'Error', this.mSPA, this.config, this.api),
+			new IntexErrorSensor(hap, this.log, 'CommandError', this.mSPA, this.config, this.api),
+			new IntexErrorSensor(hap, this.log, 'FilterCommandError', this.mSPA, this.config, this.api),
     ]);
     this.log.info('after accessories');
   }
