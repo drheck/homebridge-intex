@@ -92,9 +92,9 @@ export class IntexTempSensor implements AccessoryPlugin {
     this.log('Triggered SET CurrentTemperature: ', value);
     //this.switchService.getCharacteristic(this.Characteristic.CurrentTemperature).updateValue(value);
     //const availability: Nullable<CharacteristicValue> | Error = new Error(this.displayName + ': Service not available');
-		this.tempsensorService.getCharacteristic(this.Characteristic.CurrentTemperature).setValue(value);
-		this.tempsensorService.getCharacteristic(this.Characteristic.CurrentTemperature).updateValue(value);
-		if (value === -1 || value == -1) {
+    this.tempsensorService.getCharacteristic(this.Characteristic.CurrentTemperature).setValue(value);
+    this.tempsensorService.getCharacteristic(this.Characteristic.CurrentTemperature).updateValue(value);
+    if (value === -1) {
       return;
     }
     //add to history
@@ -130,111 +130,112 @@ export class IntexTempSensor implements AccessoryPlugin {
 
 export class IntexErrorSensor implements AccessoryPlugin {
 
-	private readonly log: Logging;
+  private readonly log: Logging;
 
-	private switchOn = false;
+  private switchOn = false;
 
-	// This property must be existent!!
-	name: string;
+  // This property must be existent!!
+  name: string;
 
-	private readonly errorsensorService: Service;
-	private informationService: Service;
-	private readonly Characteristic: typeof Characteristic;
-	private config: PlatformConfig;
-	//private historyService: any;
-	private historyService: fakegato.FakeGatoHistoryService;
+  private readonly errorsensorService: Service;
+  private informationService: Service;
+  private readonly Characteristic: typeof Characteristic;
+  private config: PlatformConfig;
+  //private historyService: any;
+  private historyService: fakegato.FakeGatoHistoryService;
 
-	public displayName: string;
+  public displayName: string;
 
-	constructor(hap: HAP, log: Logging, name: string, mrSPA: DPHIntex, config: PlatformConfig, api: API) {
-		this.log = log;
-		this.config = config;
-		this.name = name;
-		this.displayName = 'PoolError';
+  constructor(hap: HAP, log: Logging, name: string, mrSPA: DPHIntex, config: PlatformConfig, api: API) {
+    this.log = log;
+    this.config = config;
+    this.name = name;
+    this.displayName = 'PoolError';
 
-		this.Characteristic = hap.Characteristic;
+    this.Characteristic = hap.Characteristic;
 
-		// create a new Temperature Sensor service
-		this.errorsensorService = new hap.Service.MotionSensor(name);
+    // create a new Temperature Sensor service
+    this.errorsensorService = new hap.Service.MotionSensor(name);
 
-		// create handlers for required characteristics
-		this.errorsensorService.getCharacteristic(this.Characteristic.MotionDetected)
-			.on(CharacteristicEventTypes.GET, (callback: CharacteristicGetCallback) => {
-				log.debug('Current CurrentError of the errorsensor was returned: ' + (mrSPA.mError));
-				callback(undefined, mrSPA.mError);
-			});
+    // create handlers for required characteristics
+    this.errorsensorService.getCharacteristic(this.Characteristic.MotionDetected)
+      .on(CharacteristicEventTypes.GET, (callback: CharacteristicGetCallback) => {
+        log.debug('Current CurrentError of the errorsensor was returned: ' + (mrSPA.mError));
+        callback(undefined, mrSPA.mError);
+      });
 
-		this.informationService = new hap.Service.AccessoryInformation()
-			.setCharacteristic(hap.Characteristic.Manufacturer, this.config.manufacturer)
-			.setCharacteristic(hap.Characteristic.Model, this.config.model)
-			.setCharacteristic(hap.Characteristic.SerialNumber, 'SN_' + this.name)
-			.setCharacteristic(hap.Characteristic.FirmwareRevision, "1.1.3");
-		if (this.name == "Error")
-			mrSPA._esSPA = this;
-		else if (this.name == "CommandError")
-			mrSPA._cesSPA = this;
-		else if (this.name == "FilterCommandError")
-			mrSPA._filtercesSPA = this;
-		//create history services for this accessory
-		const FakeGatoHistoryService = fakegato(api);
-		this.historyService = new FakeGatoHistoryService('weather', this, {
-			storage: 'fs',
-			disableTimer: true,
-			//			filename: "PoolTemperature",
-			//			minutes: 2
-		});
+    this.informationService = new hap.Service.AccessoryInformation()
+      .setCharacteristic(hap.Characteristic.Manufacturer, this.config.manufacturer)
+      .setCharacteristic(hap.Characteristic.Model, this.config.model)
+      .setCharacteristic(hap.Characteristic.SerialNumber, 'SN_' + this.name)
+      .setCharacteristic(hap.Characteristic.FirmwareRevision, '1.1.3');
+    if (this.name === 'Error') {
+      mrSPA._esSPA = this;
+    } else if (this.name === 'CommandError') {
+      mrSPA._cesSPA = this;
+    } else if (this.name === 'FilterCommandError') {
+      mrSPA._filtercesSPA = this;
+    }
+    //create history services for this accessory
+    const FakeGatoHistoryService = fakegato(api);
+    this.historyService = new FakeGatoHistoryService('weather', this, {
+      storage: 'fs',
+      disableTimer: true,
+      //			filename: "PoolTemperature",
+      //			minutes: 2
+    });
 
-		this.historyService.name = 'PoolError';
-		this.historyService.log = this.log;
-		
-		log.info('Intex errorsensor \'%s\' created!', name);
-	}
+    this.historyService.name = 'PoolError';
+    this.historyService.log = this.log;
+
+    log.info('Intex errorsensor \'%s\' created!', name);
+  }
 
   /**
    * Handle requests to get the current value of the "Current Temperature" characteristic
    */
-	handleErrorsensorGet() {
-		this.log.debug('Triggered GET Errorsensor %s: ', this.name);
+  handleErrorsensorGet() {
+    this.log.debug('Triggered GET Errorsensor %s: ', this.name);
 
-		// set this to a valid value for CurrentTemperature
-		const currentValue = false;
+    // set this to a valid value for CurrentTemperature
+    const currentValue = false;
 
-		return currentValue;
-	}
+    return currentValue;
+  }
 
-	handleErrorsensorSet(value) {
-		this.log('Triggered SET ErrorSensor ' + this.name + ': ', value);
-		//this.switchService.getCharacteristic(this.Characteristic.CurrentTemperature).updateValue(value);
-		//const availability: Nullable<CharacteristicValue> | Error = new Error(this.displayName + ': Service not available');
-		this.errorsensorService.getCharacteristic(this.Characteristic.MotionDetected).setValue(value);
+  handleErrorsensorSet(value) {
+    this.log('Triggered SET ErrorSensor ' + this.name + ': ', value);
+    //this.switchService.getCharacteristic(this.Characteristic.CurrentTemperature).updateValue(value);
+    //const availability: Nullable<CharacteristicValue> | Error = new Error(this.displayName + ': Service not available');
+    this.errorsensorService.getCharacteristic(this.Characteristic.MotionDetected).setValue(value);
 
-		return;
+    return;
 
-		//add to history
-		this.historyService.addEntry({
-			time: new Date().getTime() / 1000,
-			temp: value,
-		});
-	}
+    //add to history
+    this.historyService.addEntry({
+      time: new Date().getTime() / 1000,
+      temp: value,
+    });
+  }
 
   /*
    * This method is optional to implement. It is called when HomeKit ask to identify the accessory.
    * Typical this only ever happens at the pairing process.
    */
-	identify(): void {
-		this.log('Identify!');
-	}
+  identify(): void {
+    this.log('Identify!');
+  }
 
   /*
    * This method is called directly after creation of this instance.
    * It should return all services which should be added to the accessory.
    */
-	getServices(): Service[] {
-		return [
-			this.informationService,
-			this.errorsensorService,
-			this.historyService,
-		];
-	}
+  getServices(): Service[] {
+    return [
+      this.informationService,
+      this.errorsensorService,
+      this.historyService,
+    ];
+  }
 
 }

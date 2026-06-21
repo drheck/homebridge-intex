@@ -46,10 +46,10 @@ export class DPHIntex {
   public _swSanitizer: IntexSwitch;
   public _swController: IntexSwitch;
 
-	public _tsSPA: IntexTempSensor;
-	public _esSPA: IntexErrorSensor;	//Error
-	public _cesSPA: IntexErrorSensor;	//Commanderror
-	public _filtercesSPA: IntexErrorSensor;	//FilterCommanderror
+  public _tsSPA: IntexTempSensor;
+  public _esSPA: IntexErrorSensor;	//Error
+  public _cesSPA: IntexErrorSensor;	//Commanderror
+  public _filtercesSPA: IntexErrorSensor;	//FilterCommanderror
 
   public _isUpdatingUI: boolean;
 
@@ -64,8 +64,8 @@ export class DPHIntex {
   public mpresetTemp: number;
   //	Characteristic.TemperatureDisplayUnits.CELSIUS = 0;
   //	Characteristic.TemperatureDisplayUnits.FAHRENHEIT = 1;
-	public mTempUnit: number;
-	public mError: string;
+  public mTempUnit: number;
+  public mError: string;
 
   username: string;
   password: string;
@@ -97,8 +97,8 @@ export class DPHIntex {
     this.mHeater = false;
     this.mcurTemp = 0;
     this.mpresetTemp = 10;
-		this.mTempUnit = 0;	//= TemperatureDisplayUnits.CELSIUS
-		this.mError = "";
+    this.mTempUnit = 0;	//= TemperatureDisplayUnits.CELSIUS
+    this.mError = '';
 
     //this._bUpdateisRunning = false;
     this.log.info('End Create Intex');
@@ -106,26 +106,38 @@ export class DPHIntex {
 
   UpdateUI(error: string) {
     //Update accessories if changed
-		this._isUpdatingUI = true;
-		this.mError = error;	
-		if (error.length > 0) {
-			//Bewegungssensor aktvieren
-			this._esSPA.handleErrorsensorSet(true);
-			this._tsSPA.handleCurrentTemperatureSet(-1 * this.mcurTemp);
-		} else {
-			this._esSPA.handleErrorsensorSet(false);
-			this._filtercesSPA.handleErrorsensorSet(false);
-			this._cesSPA.handleErrorsensorSet(false);
+    this._isUpdatingUI = true;
+    this.mError = error;
+    if (error.length > 0) {
+      //Bewegungssensor aktvieren
+      this._esSPA.handleErrorsensorSet(true);
+      this._tsSPA.handleCurrentTemperatureSet(-1 * this.mcurTemp);
+    } else {
+      this._esSPA.handleErrorsensorSet(false);
+      this._filtercesSPA.handleErrorsensorSet(false);
+      this._cesSPA.handleErrorsensorSet(false);
       this._Thermostat.handleCurrentTemperatureSet(this.mcurTemp);
       this._tsSPA.handleCurrentTemperatureSet(this.mcurTemp);
       this._Thermostat.handleTargetTemperatureSet(this.mpresetTemp);
-			this._Thermostat.handleCurrentHeatingCoolingStateSet(this.mHeater);
-			if (this._swBubbles !== undefined) this._swBubbles.handleSwitchSet(this.mBubbles);
-			if (this._swFilter !== undefined) this._swFilter.handleSwitchSet(this.mFilter);
-			if (this.mTempUnit !== undefined) this._Thermostat.handleTemperatureDisplayUnitsSet(this.mTempUnit);
-			if (this._swSanitizer !== undefined) this._swSanitizer.handleSwitchSet(this.mSanitizer);
-			if (this._swWaterjet !== undefined) this._swWaterjet.handleSwitchSet(this.mWaterjet);
-			if (this._swController !== undefined) this._swController.handleSwitchSet(this.mController);
+      this._Thermostat.handleCurrentHeatingCoolingStateSet(this.mHeater);
+      if (this._swBubbles !== undefined) {
+        this._swBubbles.handleSwitchSet(this.mBubbles);
+      }
+      if (this._swFilter !== undefined) {
+        this._swFilter.handleSwitchSet(this.mFilter);
+      }
+      if (this.mTempUnit !== undefined) {
+        this._Thermostat.handleTemperatureDisplayUnitsSet(this.mTempUnit);
+      }
+      if (this._swSanitizer !== undefined) {
+        this._swSanitizer.handleSwitchSet(this.mSanitizer);
+      }
+      if (this._swWaterjet !== undefined) {
+        this._swWaterjet.handleSwitchSet(this.mWaterjet);
+      }
+      if (this._swController !== undefined) {
+        this._swController.handleSwitchSet(this.mController);
+      }
     }
     if (error.length === 0) {
       error = 'Ok';
@@ -134,11 +146,12 @@ export class DPHIntex {
     this._isUpdatingUI = false;
   }
 
-	async postCommand(send, commandname) {
-		//27.05.2024 Wenn Poll nicht verbunden keine Buttons ausführen. Automation bringt Ednlosschelief und reboot...
-		if (this.interval === 0)
-			return;
-		//27.05.2024
+  async postCommand(send, commandname) {
+    //27.05.2024 Wenn Poll nicht verbunden keine Buttons ausfï¿½hren. Automation bringt Ednlosschelief und reboot...
+    if (this.interval === 0) {
+      return;
+    }
+    //27.05.2024
     let deviceId = '';
     clearTimeout(this.updateInterval);
     try {
@@ -163,15 +176,14 @@ export class DPHIntex {
             return res.data;
           })
           .catch((error) => {
-						this.log('posCommand-Xerror: ' + error);
-						if (commandname === 'FILTER_ONOFF') {
-							this.mError = 'FilterCommandError';
-							this._filtercesSPA.handleErrorsensorSet(true);
-						}
-						else {
-							this.mError = 'CommandError';
-							this._cesSPA.handleErrorsensorSet(true);
-						}
+            this.log('posCommand-Xerror: ' + error);
+            if (commandname === 'FILTER_ONOFF') {
+              this.mError = 'FilterCommandError';
+              this._filtercesSPA.handleErrorsensorSet(true);
+            } else {
+              this.mError = 'CommandError';
+              this._cesSPA.handleErrorsensorSet(true);
+            }
             if (error.response) {
               this.log(JSON.stringify(error.response.data));
             }
@@ -240,7 +252,7 @@ export class DPHIntex {
       this.postCommand(subcmd, commandname);
     } else {
       subcmd = value;
-			this.postCommand(cmd, commandname);
+      this.postCommand(cmd, commandname);
     }
     this.log.info('execCommand: ' + commandname + ' - ' + cmd + ' - ' + subcmd + ' - ' + value);
     //this.UpdateUI('');
@@ -335,8 +347,8 @@ export class DPHIntex {
         this.session = res.data;
       })
       .catch((error) => {
-				this.log.info('error login: ' + error);
-				this.mError = "LoginError";
+        this.log.info('error login: ' + error);
+        this.mError = 'LoginError';
         if (error.response) {
           this.log.debug(JSON.stringify(error.response.data));
         }
@@ -409,23 +421,23 @@ export class DPHIntex {
               }
             })
             .catch((error) => {
-							this.log.info('getDeviceList-for each error: ' + error);
-							this.mError = "getDeviceListError1";
+              this.log.info('getDeviceList-for each error: ' + error);
+              this.mError = 'getDeviceListError1';
               error.response && this.log.debug(JSON.stringify(error.response.data));
             });
         }
       })
       .catch((error) => {
-				this.log('getDeviceList-error: ' + error);
-				this.mError = "getDeviceListError";
+        this.log('getDeviceList-error: ' + error);
+        this.mError = 'getDeviceListError';
         error.response && this.log('getDeviceList-error.response.data: ' + JSON.stringify(error.response.data));
       });
   }
 
   async getDeviceData() {
-//    if (this._bUpdateisRunning) {
-//      return;
-//    }
+    //    if (this._bUpdateisRunning) {
+    //      return;
+    //    }
     //this._bUpdateisRunning = true;
     this.log('getDeviceData-start');
     this.deviceArray.forEach(async (deviceId) => {
