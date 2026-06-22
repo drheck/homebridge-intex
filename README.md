@@ -18,6 +18,7 @@ The plugin provides the following homekit devices:
 <br>3.3 Waterjet: Switches the Waterjet On/Off</br> 
 <br>3.4 Sanitizer: Switches the Sanitizer On/Off</br> 
 <br>3.5 Controller: Switches the Controller On/Off</br>  
+
 	
 # Hints
 If you use the plugin for the filter/heating manually or for schedules, please remember that the duration is set by the controller.
