@@ -2,15 +2,15 @@
   "displayName": "Homebridge Intex",
   "name": "homebridge-intex",
   "author": "DrHeck",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Publish your intex pool as an homekit platform",
   "license": "ISC",
-	"files": [
-		"LICENSE",
-		"dist",
-		"config.schema.json",
-		"sample-config.json"
-	],
+  "files": [
+    "LICENSE",
+    "dist",
+    "config.schema.json",
+    "sample-config.json"
+  ],
   "homepage": "https://github.com/drheck/homebridge-intex",
   "repository": {
     "type": "git",
@@ -23,10 +23,10 @@
   "bugs": {
     "url": "https://github.com/drheck/homebridge-intex/issues"
   },
-	"engines": {
-		"node": "^22.12.0 || ^24.0.0",
-		"homebridge": "^1.6.0 || ^2.0.0"
-	},
+  "engines": {
+    "node": "^22.12.0 || ^24.0.0",
+    "homebridge": "^1.6.0 || ^2.0.0"
+  },
   "main": "dist/platform.js",
   "scripts": {
     "lint": "eslint src/**.ts --max-warnings=0 --fix",
@@ -48,7 +48,7 @@
     "nodemon": "^2.0.20",
     "rimraf": "^3.0.2",
     "ts-node": "^10.9.1",
-		"axios": ">=1.16.0",
+    "axios": ">=1.16.0",
     "typescript": "^4.8.4"
   },
   "dependencies": {
