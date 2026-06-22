@@ -13,11 +13,11 @@ The plugin provides the following homekit devices:
 1. One Temperaturesensor (shows the current temperature, history is provided in Eve App)
 2. One Thermostat accessory (Shows current temperature, you can switch heating On/Off and set the target temperature)
 3. Switches:
-  <br>3.1 Filter: Switches the Filter On/Off</br>
-	3.2 Bubbles: Switches the Bubbles On/Off     
-	3.3 Waterjet: Switches the Waterjet On/Off    
-   	3.4 Sanitizer: Switches the Sanitizer On/Off    
-	3.5 Controller: Switches the Controller On/Off     
+<br>3.1 Filter: Switches the Filter On/Off</br>
+<br>3.2 Bubbles: Switches the Bubbles On/Off</br> 
+<br>3.3 Waterjet: Switches the Waterjet On/Off</br> 
+<br>3.4 Sanitizer: Switches the Sanitizer On/Off</br> 
+<br>3.5 Controller: Switches the Controller On/Off</br>  
 	
 # Hints
 If you use the plugin for the filter/heating manually or for schedules, please remember that the duration is set by the controller.
